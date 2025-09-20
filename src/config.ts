@@ -8,15 +8,15 @@ import type {
 import { LinkPreset } from "./types/config";
 
 export const siteConfig: SiteConfig = {
-	title: "yCENzh's Blog",
-	subtitle: "爱你所爱~",
+	title: "Nova's Blog",
+	subtitle: "ゆるゆるプログラミング",
 	themeColor: {
 		hue: 275, // Default hue for the theme color, from 0 to 360. e.g. red: 0, teal: 200, cyan: 250, pink: 345
 		fixed: false, // Hide the theme color picker for visitors
 	},
 	banner: {
 		enable: true,
-		src: "/Celestia.webp", // Relative to the /src directory. Relative to the /public directory if it starts with '/'
+		src: "/banner.jpeg", // Relative to the /src directory. Relative to the /public directory if it starts with '/'
 		position: "center", // Equivalent to object-position, only supports 'top', 'center', 'bottom'. 'center' by default
 		credit: {
 			enable: true, // Display the credit text of the banner image
@@ -58,9 +58,9 @@ export const navBarConfig: NavBarConfig = {
 };
 
 export const profileConfig: ProfileConfig = {
-	avatar: "/avatar.webp", // Relative to the /src directory. Relative to the /public directory if it starts with '/' 原assets/images/demo-avatar.png,可选https://q2.qlogo.cn/headimg_dl?dst_uin=189563385&spec=0
-	name: "yCENzh",
-	bio: "Protect What You Love./爱你所爱！",
+	avatar: "/icon.JPG", // Relative to the /src directory. Relative to the /public directory if it starts with '/' 原assets/images/demo-avatar.png,可选https://q2.qlogo.cn/headimg_dl?dst_uin=189563385&spec=0
+	name: "リラ",
+	bio: "某S社のパートナーとして活動中",
 	links: [
 		/*{
 			name: "Twitter",
