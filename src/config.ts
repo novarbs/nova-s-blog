@@ -29,11 +29,11 @@ export const siteConfig: SiteConfig = {
 		depth: 2, // Maximum heading depth to show in the table, from 1 to 3
 	},
 	favicon: [
-		   {
-		     src: '/favicon/icon.webp',
-		//   theme: 'light',
-		//   sizes: '32x32',
-		   }
+		{
+			src: "/favicon/icon.webp",
+			//   theme: 'light',
+			//   sizes: '32x32',
+		},
 	],
 };
 
