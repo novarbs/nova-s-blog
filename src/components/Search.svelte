@@ -3,25 +3,25 @@ import Icon from "@iconify/svelte";
 import { url } from "@utils/url-utils.ts";
 import { onMount } from "svelte";
 
-// 防抖函数
+// デバウンス関数
 function debounce<T extends (...args: any[]) => any>(
-	func: T,
-	wait: number
+    func: T,
+    wait: number
 ): (...args: Parameters<T>) => void {
-	let timeout: NodeJS.Timeout;
-	return (...args: Parameters<T>) => {
-		clearTimeout(timeout);
-		timeout = setTimeout(() => func(...args), wait);
-	};
+    let timeout: NodeJS.Timeout;
+    return (...args: Parameters<T>) => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func(...args), wait);
+    };
 }
 
 interface SearchResult {
-	url: string;
-	meta: {
-		title: string;
-	};
-	excerpt: string;
-	urlPath?: string;
+    url: string;
+    meta: {
+        title: string;
+    };
+    excerpt: string;
+    urlPath?: string;
 }
 
 let keywordDesktop = "";
@@ -31,19 +31,19 @@ let isSearching = false;
 let posts: any[] = [];
 
 const togglePanel = () => {
-	const panel = document.getElementById("search-panel");
-	panel?.classList.toggle("float-panel-closed");
+    const panel = document.getElementById("search-panel");
+    panel?.classList.toggle("float-panel-closed");
 };
 
 const setPanelVisibility = (show: boolean, isDesktop: boolean): void => {
-	const panel = document.getElementById("search-panel");
-	if (!panel || !isDesktop) return;
+    const panel = document.getElementById("search-panel");
+    if (!panel || !isDesktop) return;
 
-	if (show) {
-		panel.classList.remove("float-panel-closed");
-	} else {
-		panel.classList.add("float-panel-closed");
-	}
+    if (show) {
+        panel.classList.remove("float-panel-closed");
+    } else {
+        panel.classList.add("float-panel-closed");
+    }
 };
 
 const highlightText = (text: string, keyword: string): string => {
@@ -53,120 +53,120 @@ const highlightText = (text: string, keyword: string): string => {
     return text.replace(regex, "<mark>$1</mark>");
 };
 
-// 优化的搜索函数，提升性能
+// パフォーマンスを向上させるための最適化された検索関数
 const search = async (keyword: string, isDesktop: boolean): Promise<void> => {
-	if (!keyword.trim()) {
-		setPanelVisibility(false, isDesktop);
-		result = [];
-		return;
-	}
+    if (!keyword.trim()) {
+        setPanelVisibility(false, isDesktop);
+        result = [];
+        return;
+    }
 
-	isSearching = true;
+    isSearching = true;
 
-	try {
-		const keywordLower = keyword.toLowerCase().trim();
-		const searchResults = posts
-			.filter((post) => {
-				// 优化搜索逻辑，减少字符串操作
-				const titleMatch = post.title.toLowerCase().includes(keywordLower);
-				const descMatch = post.description?.toLowerCase().includes(keywordLower);
-				const linkMatch = post.link.toLowerCase().includes(keywordLower);
-				const contentMatch = post.content.toLowerCase().includes(keywordLower);
-				
-				return titleMatch || descMatch || linkMatch || contentMatch;
-			})
-			.map((post) => {
-				const contentLower = post.content.toLowerCase();
-				const contentIndex = contentLower.indexOf(keywordLower);
-				
-				let excerpt = '';
-				if (contentIndex !== -1) {
-					const start = Math.max(0, contentIndex - 50);
-					const end = Math.min(post.content.length, contentIndex + 100);
-					excerpt = post.content.substring(start, end);
-					if (start > 0) excerpt = '...' + excerpt;
-					if (end < post.content.length) excerpt = excerpt + '...';
-				} else {
-					excerpt = post.description || post.content.substring(0, 150) + '...';
-				}
+    try {
+        const keywordLower = keyword.toLowerCase().trim();
+        const searchResults = posts
+            .filter((post) => {
+                // 検索ロジックを最適化し、文字列操作を減らす
+                const titleMatch = post.title.toLowerCase().includes(keywordLower);
+                const descMatch = post.description?.toLowerCase().includes(keywordLower);
+                const linkMatch = post.link.toLowerCase().includes(keywordLower);
+                const contentMatch = post.content.toLowerCase().includes(keywordLower);
+                
+                return titleMatch || descMatch || linkMatch || contentMatch;
+            })
+            .map((post) => {
+                const contentLower = post.content.toLowerCase();
+                const contentIndex = contentLower.indexOf(keywordLower);
+                
+                let excerpt = '';
+                if (contentIndex !== -1) {
+                    const start = Math.max(0, contentIndex - 50);
+                    const end = Math.min(post.content.length, contentIndex + 100);
+                    excerpt = post.content.substring(start, end);
+                    if (start > 0) excerpt = `...${excerpt}`;
+                    if (end < post.content.length) excerpt = `${excerpt}...`;
+                } else {
+                    excerpt = post.description || `${post.content.substring(0, 150)}...`;
+                }
 
-				const postUrl = post.link.startsWith('/') ? post.link : `/posts/${post.link}/`;
+                const postUrl = post.link.startsWith('/') ? post.link : `/posts/${post.link}/`;
 
-				return {
-					url: url(postUrl),
-					meta: {
-						title: post.title
-					},
-					excerpt: highlightText(excerpt, keyword),
-					urlPath: postUrl
-				};
-			});
+                return {
+                    url: url(postUrl),
+                    meta: {
+                        title: post.title
+                    },
+                    excerpt: highlightText(excerpt, keyword),
+                    urlPath: postUrl
+                };
+            });
 
-		result = searchResults;
-		setPanelVisibility(result.length > 0, isDesktop);
-	} catch (error) {
-		console.error("Search error:", error);
-		result = [];
-		setPanelVisibility(false, isDesktop);
-	} finally {
-		isSearching = false;
-	}
+        result = searchResults;
+        setPanelVisibility(result.length > 0, isDesktop);
+    } catch (error) {
+        console.error("検索エラー:", error);
+        result = [];
+        setPanelVisibility(false, isDesktop);
+    } finally {
+        isSearching = false;
+    }
 };
 
-// 创建防抖搜索函数
+// デバウンスされた検索関数を作成
 const debouncedSearch = debounce(search, 300);
 
 onMount(async () => {
-	try {
-		const response = await fetch("/rss.xml");
-		const text = await response.text();
-		const parser = new DOMParser();
-		const xml = parser.parseFromString(text, "text/xml");
-		const items = xml.querySelectorAll("item");
+    try {
+        const response = await fetch("/rss.xml");
+        const text = await response.text();
+        const parser = new DOMParser();
+        const xml = parser.parseFromString(text, "text/xml");
+        const items = xml.querySelectorAll("item");
 
-		posts = Array.from(items).map((item) => {
-			// 尝试多种方式获取content:encoded内容
-			let content = "";
-			const contentEncoded = 
-				item.getElementsByTagNameNS("*", "encoded")[0]?.textContent ||
-				item.querySelector("*|encoded")?.textContent ||
-				"";
-			
-			if (contentEncoded) {
-				// 移除HTML标签并解码HTML实体
-				const tempDiv = document.createElement("div");
-				tempDiv.innerHTML = contentEncoded;
-				content = tempDiv.textContent || tempDiv.innerText || "";
-			}
+        posts = Array.from(items).map((item) => {
+            // content:encodedコンテンツを取得するために複数の方法を試す
+            let content = "";
+            const contentEncoded = 
+                item.getElementsByTagNameNS("*", "encoded")[0]?.textContent ||
+                item.querySelector("*|encoded")?.textContent ||
+                "";
+            
+            if (contentEncoded) {
+                // HTMLタグを削除し、HTMLエンティティをデコードする
+                const tempDiv = document.createElement("div");
+                tempDiv.innerHTML = contentEncoded;
+                content = tempDiv.textContent || tempDiv.innerText || "";
+            }
 
-			// 从link中提取相对路径
-			const linkText = item.querySelector("link")?.textContent || "";
-			let relativePath = "";
-			
-			// 处理多种可能的URL格式
-			if (linkText.includes("/posts/")) {
-				// 匹配 /posts/ 后的所有内容（包括多级路径）
-				const match = linkText.match(/\/posts\/(.+?)(?:\/$|$)/);
-				if (match) {
-					relativePath = match[1];
-				}
-			} else {
-				// 如果不包含 /posts/，尝试获取最后的路径部分
-				const urlParts = linkText.split('/').filter(Boolean);
-				relativePath = urlParts[urlParts.length - 1] || "";
-			}
+            // linkから相対パスを抽出する
+            const linkText = item.querySelector("link")?.textContent || "";
+            let relativePath = "";
+            
+            // 複数の可能性のあるURLフォーマットを処理する
+            if (linkText.includes("/posts/")) {
+                // /posts/ 以降のすべてのコンテンツ（複数階層のパスを含む）にマッチさせる
+                const match = linkText.match(/\/posts\/(.+?)(?:\/$|$)/);
+                if (match) {
+                    relativePath = match[1];
+                }
+            } else {
+                // /posts/ が含まれていない場合、パスの最後の部分を取得しようと試みる
+                const urlParts = linkText.split('/').filter(Boolean);
+                relativePath = urlParts[urlParts.length - 1] || "";
+            }
 
-			return {
-				title: item.querySelector("title")?.textContent || "",
-				description: item.querySelector("description")?.textContent || "",
-				content: content,
-				link: relativePath,
-				fullLink: linkText // 保留完整链接以备用
-			};
-		});
-	} catch (error) {
-		console.error("Error fetching RSS:", error);
-	}
+            return {
+                title: item.querySelector("title")?.textContent || "",
+                description: item.querySelector("description")?.textContent || "",
+                content: content,
+                link: relativePath,
+                fullLink: linkText // 予備として完全なリンクを保持する
+            };
+        });
+    } catch (error) {
+        console.error("RSSの取得エラー:", error);
+    }
 });
 
 $: if (keywordDesktop !== undefined) {
@@ -178,41 +178,36 @@ $: if (keywordMobile !== undefined) {
 }
 </script>
 
-<!-- search bar for desktop view -->
 <div id="search-bar" class="hidden lg:flex transition-all items-center h-11 mr-2 rounded-lg
       bg-black/[0.04] hover:bg-black/[0.06] focus-within:bg-black/[0.06]
       dark:bg-white/5 dark:hover:bg-white/10 dark:focus-within:bg-white/10
 ">
     <Icon icon="material-symbols:search" class="absolute text-[1.25rem] pointer-events-none ml-3 transition my-auto text-black/30 dark:text-white/30"></Icon>
-    <input placeholder="往事书" bind:value={keywordDesktop} on:focus={() => debouncedSearch(keywordDesktop, true)}
+    <input placeholder="記事を検索" bind:value={keywordDesktop} on:focus={() => debouncedSearch(keywordDesktop, true)}
            class="transition-all pl-10 text-sm bg-transparent outline-0
          h-full w-40 active:w-60 focus:w-60 text-black/50 dark:text-white/50"
     >
 </div>
 
-<!-- toggle btn for phone/tablet view -->
-<button on:click={togglePanel} aria-label="Search Panel" id="search-switch"
+<button on:click={togglePanel} aria-label="検索パネル" id="search-switch"
         class="btn-plain scale-animation lg:!hidden rounded-lg w-11 h-11 active:scale-90">
     <Icon icon="material-symbols:search" class="text-[1.25rem]"></Icon>
 </button>
 
-<!-- search panel -->
 <div id="search-panel" class="float-panel float-panel-closed search-panel absolute md:w-[30rem]
 top-20 left-4 md:left-[unset] right-4 shadow-2xl rounded-2xl p-2">
 
-    <!-- search bar inside panel for phone/tablet -->
     <div id="search-bar-inside" class="flex relative lg:hidden transition-all items-center h-11 rounded-xl
       bg-black/[0.04] hover:bg-black/[0.06] focus-within:bg-black/[0.06]
       dark:bg-white/5 dark:hover:bg-white/10 dark:focus-within:bg-white/10
   ">
         <Icon icon="material-symbols:search" class="absolute text-[1.25rem] pointer-events-none ml-3 transition my-auto text-black/30 dark:text-white/30"></Icon>
-        <input placeholder="Search" bind:value={keywordMobile}
+        <input placeholder="検索" bind:value={keywordMobile}
                class="pl-10 absolute inset-0 text-sm bg-transparent outline-0
                focus:w-60 text-black/50 dark:text-white/50"
         >
     </div>
 
-    <!-- search results -->
     {#each result as item}
         <a href={item.url}
            class="transition first-of-type:mt-2 lg:first-of-type:mt-0 group block

@@ -9,18 +9,16 @@ const currentYear = new Date().getFullYear();
 
 <div class="transition border-dashed border-[oklch(85%_0.01_var(--hue))] dark:border-white/15 rounded-2xl mb-12 flex flex-col items-center justify-center px-6">
     <div class="transition text-50 text-sm text-center">
-        &copy; <span id="copyright-year">{currentYear}</span> {profileConfig.name}. All Rights Reserved. /
-        <a class="transition link text-[var(--primary)] font-medium" target="_blank" href={url('rss.xml')}>RSS</a> /
-        <a class="transition link text-[var(--primary)] font-medium" target="_blank" href={url('sitemap-index.xml')}>Sitemap</a>
-        <br>
+
+        <!-- 技術クレジット。'Powered by'はそのままにすることが多いですが、文脈に応じて変更可能です。 -->
         Powered by
         <a class="transition link text-[var(--primary)] font-medium" target="_blank" href="https://astro.build">Astro</a> &
         <a class="transition link text-[var(--primary)] font-medium" target="_blank" href="https://github.com/yCENzh/Fuwari-yCENzh">Fuwari</a>
         <br />
+        <!-- 以下のリンクは固有名詞のため、テキストは変更していません。 -->
         <a class="transition link text-[var(--primary)] font-medium" target="_blank" href="https://icp.gov.moe/?keyword=20251413">萌ICP备20251413号</a>
         <a href="https://icp.redcha.cn/beian/ICP-2025088520.html" title="茶ICP备2025088520号" target="_blank">茶ICP备2025088520号</a>
         <br />
-        <a class="transition link text-[var(--primary)] font-medium" target="_blank" href="https://www.travellings.cn/train.html">这是一辆通往新世界的列车-Travelling</a>
     </div>
 </div>
 
@@ -28,13 +26,13 @@ const currentYear = new Date().getFullYear();
   .transition {
     transition: all 0.3s ease;
   }
-  
+ 
   .link {
     text-decoration: none;
     position: relative;
     padding: 0 0.25rem;
   }
-  
+ 
   .link:hover {
     text-decoration: underline;
     text-decoration-color: var(--primary);
@@ -52,12 +50,12 @@ const currentYear = new Date().getFullYear();
       margin-left: 1.5rem;
       margin-right: 1.5rem;
     }
-    
+   
     .px-6 {
       padding-left: 1.5rem;
       padding-right: 1.5rem;
     }
-    
+   
     .text-sm {
       font-size: 0.8125rem;
     }

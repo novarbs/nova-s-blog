@@ -7,99 +7,115 @@ import type {
 } from "./types/config";
 import { LinkPreset } from "./types/config";
 
+// --- サイト全体の基本設定 ---
 export const siteConfig: SiteConfig = {
+	// サイトのメインタイトル
 	title: "Nova's Blog",
+	// サイトのサブタイトル
 	subtitle: "ゆるゆるプログラミング",
+	// テーマカラーの設定
 	themeColor: {
-		hue: 291, // Default hue for the theme color, from 0 to 360. e.g. red: 0, teal: 200, cyan: 250, pink: 345A
-		fixed: false, // Hide the theme color picker for visitors
+		// 色相 (0から360の値で指定します。例: 赤:0, 青:240, 紫:291)
+		hue: 291,
+		// trueにすると訪問者がテーマカラーを変更できなくなります
+		fixed: false,
 	},
+	// ページ上部に表示されるバナー画像の設定
 	banner: {
+		// trueにするとバナー画像が表示されます
 		enable: true,
-		src: "/banner.jpeg", // Relative to the /src directory. Relative to the /public directory if it starts with '/'
-		position: "center", // Equivalent to object-position, only supports 'top', 'center', 'bottom'. 'center' by default
+		// バナー画像のパス ('/'から始めるとpublicフォルダからの相対パスになります)
+		src: "/banner.jpeg",
+		// 画像の表示位置 ('top', 'center', 'bottom'から選択)
+		position: "center",
+		// バナー画像のクレジット表示設定
 		credit: {
-			enable: true, // Display the credit text of the banner image
-			text: "Pixiv @chokei", // Credit text to be displayed
-			url: "https://www.pixiv.net/artworks/122782209", // (Optional) URL link to the original artwork or artist's page
+			// trueにしてクレジットを表示します
+			enable: true,
+			// 表示するテキスト
+			text: "Generated with Stable Diffusion", // "Stable Diffusion" など利用したサービス名
+			// (任意) そのサービスの公式サイトURLを貼ります
+			url: "https://civitai.com/",
 		},
 	},
+	// 記事ページの目次設定
 	toc: {
-		enable: true, // Display the table of contents on the right side of the post
-		depth: 2, // Maximum heading depth to show in the table, from 1 to 3
+		// trueにすると記事の右側に目次が表示されます
+		enable: true,
+		// 目次に表示する見出しの深さ (1〜3で指定。例: 2だと<h2>まで表示)
+		depth: 2,
 	},
+	// ファビコン(ブラウザのタブに表示されるアイコン)の設定
 	favicon: [
 		{
-			src: "/favicon/icon.webp",
-			//   theme: 'light',
-			//   sizes: '32x32',
+			src: "/icon.png",
 		},
 	],
 };
 
+// --- ナビゲーションバーの設定 ---
 export const navBarConfig: NavBarConfig = {
+	// ナビゲーションバーに表示するリンクのリスト
 	links: [
-		LinkPreset.Home,
-		LinkPreset.Archive,
-		LinkPreset.Series,
-		LinkPreset.About,
-		LinkPreset.Friends,
-		/*{
-			name: "GitHub",
-			url: "https://github.com/yCENzh", // Internal links should not include the base path, as it is automatically added
-			external: true, // Show an external link icon and will open in a new tab
-		},*/
+		LinkPreset.Home, // 「ホーム」へのリンク
+		LinkPreset.Archive, // 「アーカイブ」へのリンク
+		LinkPreset.Series, // 「シリーズ」へのリンク
+		LinkPreset.About, // 「このサイトについて」へのリンク
+		LinkPreset.Friends, // 「フレンズ」へのリンク
+		/* 自分でリンクを追加する場合の例
 		{
-			name: "开往",
-			url: "https://www.travellings.cn/train.html",
+			// 表示名
+			name: "GitHub",
+			// リンク先のURL
+			url: "https://github.com/novarbs",
+			// trueにすると外部リンクアイコンが表示され、新しいタブで開きます
 			external: true,
 		},
+		*/
 	],
 };
 
+// --- プロフィールカードの設定 ---
 export const profileConfig: ProfileConfig = {
-	avatar: "/icon.JPG", // Relative to the /src directory. Relative to the /public directory if it starts with '/' 原assets/images/demo-avatar.png,可选https://q2.qlogo.cn/headimg_dl?dst_uin=189563385&spec=0
+	// プロフィール画像 ('/'から始めるとpublicフォルダからの相対パスになります)
+	avatar: "/icon.JPG",
+	// あなたの名前
 	name: "リラ",
+	// 簡単な自己紹介文
 	bio: "某S社のパートナーとして活動中",
+	// SNSなどのリンクのリスト
 	links: [
-		/*{
+		/* リンクを追加する場合の例
+		{
 			name: "Twitter",
-			icon: "fa6-brands:twitter", // Visit https://icones.js.org/ for icon codes
-			// You will need to install the corresponding icon set if it's not already included
-			// `pnpm add @iconify-json/<icon-set-name>`
+			// アイコン名 ( https://icones.js.org/ で探せます)
+			icon: "fa6-brands:twitter",
 			url: "https://twitter.com",
 		},
-		{
-			name: "Steam",
-			icon: "fa6-brands:steam",
-			url: "https://store.steampowered.com",
-		},*/
+		*/
 		{
 			name: "GitHub",
 			icon: "fa6-brands:github",
-			url: "https://github.com/yCENzh",
+			url: "https://github.com/novarbs",
 		},
 		{
-			name: "Telegram",
-			icon: "fa6-brands:telegram",
-			url: "https://t.me/yCENzh",
-		},
-		{
-			name: "开往",
-			icon: "fa6-solid:train-subway",
-			url: "https://www.travellings.cn/train.html",
+			name: "X",
+			icon: "fa6-brands:twitter",
+			url: "https://x.com/Nova_Rbs/",
 		},
 	],
 };
 
+// --- 記事下のライセンス表示設定 ---
 export const licenseConfig: LicenseConfig = {
-	enable: true,
-	name: "CC BY-NC-SA 4.0",
+	enable: false, // ここを false に変更
+	name: "CC BY-NC-SA 4.0", // これらは非表示になるので、そのままでOK
 	url: "https://creativecommons.org/licenses/by-nc-sa/4.0/",
 };
 
+// --- コードブロックの見た目(シンタックスハイライト)設定 ---
 export const expressiveCodeConfig: ExpressiveCodeConfig = {
-	// Note: Some styles (such as background color) are being overridden, see the astro.config.mjs file.
-	// Please select a dark theme, as this blog theme currently only supports dark background color
+	// ブログテーマがダークモードのみをサポートしているため、ダーク系のテーマを選んでください
+	// 例: 'github-dark', 'dracula', 'one-dark-pro' など
 	theme: "github-dark",
 };
