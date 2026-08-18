@@ -1,7 +1,8 @@
 ---
-import "@fontsource/roboto/400.css";
-import "@fontsource/roboto/500.css";
-import "@fontsource/roboto/700.css";
+import "@fontsource/m-plus-rounded-1c/400.css";
+import "@fontsource/m-plus-rounded-1c/500.css";
+import "@fontsource/m-plus-rounded-1c/700.css";
+import "@fontsource/m-plus-rounded-1c/800.css";
 
 import ConfigCarrier from "@components/ConfigCarrier.astro";
 import { profileConfig, siteConfig } from "@/config";
@@ -51,7 +52,7 @@ if (title) {
 const favicons: Favicon[] =
 	siteConfig.favicon.length > 0 ? siteConfig.favicon : defaultFavicons;
 
-const siteLang = "zh-CN";
+const siteLang = "ja";
 
 const bannerOffsetByPosition = {
 	top: `${BANNER_HEIGHT_EXTEND}vh`,
@@ -215,12 +216,12 @@ import {
 } from "../constants/constants";
 import { siteConfig } from '../config';
 
-// 导入 Fancybox
+// Fancybox をインポート
 import { Fancybox } from "@fancyapps/ui";
 import "@fancyapps/ui/dist/fancybox/fancybox.css";
 
 const bannerEnabled = !!document.getElementById('banner-wrapper');
-let fancyboxInstance; // Fancybox 实例
+let fancyboxInstance; // Fancybox インスタンス
 
 function setClickOutsideToClose(panel, ignores) {
 	document.addEventListener("click", event => {
@@ -247,8 +248,8 @@ function loadHue() {
 }
 
 /**
- * ✅ [新增] 图片加载处理函数
- * 处理所有使用 ImageWrapper 组件的图片的加载动画
+ * ✅ [追加] 画像ロード処理関数
+ * ImageWrapper コンポーネントを使用した全画像のロードアニメーションを処理
  */
 function initImageLoading() {
     const imageWrappers = document.querySelectorAll('[data-image-wrapper]');
@@ -259,14 +260,14 @@ function initImageLoading() {
         
         if (!img || !loadingBar) return;
         
-        // 检查图片是否已经加载完成（从缓存）
+        // 画像がキャッシュからロード済みかチェック
         if (img.complete && img.naturalHeight !== 0) {
             img.classList.add('loaded');
             loadingBar.classList.add('hide');
             return;
         }
         
-        // 创建新的 Image 对象来检测加载
+        // 新しい Image オブジェクトを作成してロードを検知
         const tempImg = new Image();
         tempImg.src = img.src;
         
@@ -285,8 +286,8 @@ function initImageLoading() {
 }
 
 /**
- * ✅ [新增] 图片懒加载观察器
- * 监听新添加的图片并自动初始化加载动画
+ * ✅ [追加] 画像遅延ロードオブザーバー
+ * 新しく追加された画像を監視し、自動的にロードアニメーションを初期化
  */
 function setupImageObserver() {
     const observer = new MutationObserver((mutations) => {
@@ -310,8 +311,8 @@ function setupImageObserver() {
 }
 
 /**
- * ✅ [优化] 按需初始化 KaTeX 公式的自定义滚动条
- * 只有当页面上存在 .katex-display 元素时，才会执行相关逻辑。
+ * ✅ [最適化] KaTeX 数式のカスタムスクロールバーをオンデマンドで初期化
+ * ページに .katex-display 要素がある場合のみ関連ロジックを実行
  */
 function initCustomScrollbar() {
 	const bodyElement = document.querySelector('body');
@@ -324,7 +325,7 @@ function initCustomScrollbar() {
 
 	const katexElements = document.querySelectorAll('.katex-display');
 	if (katexElements.length === 0) {
-		return; // 如果页面没有 KaTeX 公式，直接返回，避免不必要的性能开销
+		return; // ページに KaTeX 数式がなければ直接リターンし、不要なパフォーマンスコストを回避
 	}
 
 	const katexObserverOptions = { root: null, rootMargin: '100px', threshold: 0.1 };
@@ -354,31 +355,31 @@ function initCustomScrollbar() {
 }
 
 /**
- * ✅ [优化] 按需初始化 Fancybox 图片灯箱
- * 只有当页面上存在符合条件的图片时，才创建实例。
+ * ✅ [最適化] Fancybox 画像ライトボックスをオンデマンドで初期化
+ * ページに条件を満たす画像がある場合のみインスタンスを作成
  */
 function createFancybox() {
     const gallerySelector = ".custom-md img, #post-cover img";
     const images = document.querySelectorAll(gallerySelector);
 
     if (images.length === 0) {
-        return; // 如果页面上没有图片，则不初始化灯箱，节省性能
+        return; // ページに画像がなければライトボックスを初期化せず、パフォーマンスを節約
     }
 
-    // 为每个图片添加 data-fancybox 属性
+    // 各画像に data-fancybox 属性を追加
     images.forEach((img, index) => {
         if (!img.hasAttribute('data-fancybox')) {
             img.setAttribute('data-fancybox', 'gallery');
-            // 可选：添加标题，例如从 alt 属性获取
+            // 任意: alt 属性からキャプションを追加
             if (img.alt && !img.hasAttribute('data-caption')) {
                 img.setAttribute('data-caption', img.alt);
             }
         }
     });
 
-    // 初始化 Fancybox
+    // Fancybox を初期化
     fancyboxInstance = Fancybox.bind(gallerySelector, {
-        // Fancybox 配置选项
+        // Fancybox 設定オプション
         dragToClose: false,
         Toolbar: {
             display: {
@@ -401,7 +402,7 @@ function showBanner() {
 	banner.classList.remove('opacity-0', 'scale-105');
 }
 
-// 页面滚动时的处理函数
+// ページスクロール時の処理関数
 function scrollFunction() {
 	const backToTopBtn = document.getElementById('back-to-top-btn');
 	const toc = document.getElementById('toc-wrapper');
@@ -440,7 +441,7 @@ function scrollFunction() {
 	}
 }
 
-// 浏览器窗口大小变化时的处理函数
+// ブラウザウィンドウサイズ変更時の処理関数
 function resizeFunction() {
 	let offset = Math.floor(window.innerHeight * (BANNER_HEIGHT_EXTEND / 100));
 	offset = offset - offset % 4;
@@ -448,17 +449,17 @@ function resizeFunction() {
 }
 
 /**
- * 核心初始化函数
- * 在首次加载和每次 swup 页面切换后运行
+ * コア初期化関数
+ * 初回ロード時および swup ページ遷移後に実行
  */
 function initPageContent() {
 	initCustomScrollbar();
 	createFancybox();
-	initImageLoading(); // ✅ [新增] 初始化图片加载
+	initImageLoading(); // ✅ [追加] 画像ロードを初期化
 }
 
 /**
- * 设置 swup 钩子，用于处理客户端路由
+ * swup フックのセットアップ（クライアントサイドルーティング用）
  */
 function setupSwupHooks() {
 	if (!window.swup) return;
@@ -475,7 +476,7 @@ function setupSwupHooks() {
 	});
     
 	window.swup.hooks.on('content:replace', () => {
-        // 在替换内容前，销毁旧的灯箱实例
+        // コンテンツ置換前に古いライトボックスインスタンスを破棄
         if (fancyboxInstance) {
             fancyboxInstance.destroy();
             fancyboxInstance = null;
@@ -483,10 +484,10 @@ function setupSwupHooks() {
 	}, { before: true });
 
 	window.swup.hooks.on('page:view', () => {
-        // 页面切换动画完成后，为新内容初始化脚本
+        // ページ遷移アニメーション完了後、新コンテンツのスクリプトを初期化
         initPageContent();
         
-        // 恢复页面高度
+        // ページの高さを復元
 		const heightExtend = document.getElementById('page-height-extend');
 		if (heightExtend) heightExtend.classList.remove('hidden');
 
@@ -516,37 +517,37 @@ function setupSwupHooks() {
 }
 
 /**
- * 网站总入口函数
- * 设置所有一次性的事件监听器和钩子
+ * サイト全体のエントリーポイント関数
+ * すべての一回限りのイベントリスナーとフックを設定
  */
 function initializeSite() {
-	// 加载主题和颜色配置
+	// テーマとカラー設定をロード
 	loadTheme();
 	loadHue();
 
-	// 设置一次性的点击监听
+	// 一回限りのクリックリスナーを設定
 	setClickOutsideToClose("display-setting", ["display-setting", "display-settings-switch"]);
 	setClickOutsideToClose("nav-menu-panel", ["nav-menu-panel", "nav-menu-switch"]);
 	setClickOutsideToClose("search-panel", ["search-panel", "search-bar", "search-switch"]);
 	
-    // 显示 Banner
+    // バナーを表示
     showBanner();
 
-	// 绑定全局滚动和窗口大小变化事件
+	// グローバルスクロールとウィンドウサイズ変更イベントをバインド
 	window.onscroll = scrollFunction;
 	window.onresize = resizeFunction;
 
-	// 设置 Swup 导航钩子
+	// Swup ナビゲーションフックを設定
 	setupSwupHooks();
 
-	// 首次加载页面时，执行内容初始化
+	// 初回ページロード時にコンテンツ初期化を実行
 	initPageContent();
 	
-	// ✅ [新增] 设置图片观察器
+	// ✅ [追加] 画像オブザーバーを設定
 	setupImageObserver();
 }
 
-// 启动逻辑：等待 swup 可用后，初始化所有功能
+// 起動ロジック：swup が利用可能になったら全機能を初期化
 if (window.swup) {
 	initializeSite();
 } else {

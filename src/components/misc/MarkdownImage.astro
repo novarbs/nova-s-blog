@@ -9,7 +9,7 @@ interface Props {
 const { src, alt } = Astro.props;
 const isRemote = src.startsWith("http");
 
-// 动态导入本地图片
+// ローカル画像を動的にインポート
 const localImage = !isRemote ? await import(/* @vite-ignore */ `../../${src}`) : null;
 ---
 

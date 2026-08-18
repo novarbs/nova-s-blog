@@ -1,32 +1,55 @@
 ---
+// ユーティリティ関数からカテゴリーリストを取得する関数をインポート
 import { getCategoryList } from "../../utils/content-utils";
+// 汎用的なボタンリンクコンポーネントをインポート
 import ButtonLink from "../control/ButtonLink.astro";
+// ウィジェットの共通レイアウトコンポーネントをインポート
 import WidgetLayout from "./WidgetLayout.astro";
 
+// すべてのカテゴリーのリストを取得
 const categories = await getCategoryList();
 
+// --- 定数の設定 ---
+// 折りたたまれた状態のウィジェットの高さ
 const COLLAPSED_HEIGHT = "7.5rem";
+// ウィジェットを折りたたむかどうかのしきい値（この数以上のカテゴリーがあれば折りたたむ）
 const COLLAPSE_THRESHOLD = 5;
 
+// カテゴリー数がしきい値以上の場合に true となるフラグ
 const isCollapsed = categories.length >= COLLAPSE_THRESHOLD;
 
+// --- コンポーネントのプロパティ定義 ---
 interface Props {
 	class?: string;
 	style?: string;
 }
+// 親コンポーネントから渡された class と style を受け取る
 const className = Astro.props.class;
 const style = Astro.props.style;
 ---
 
-<WidgetLayout name="分类" id="categories" isCollapsed={isCollapsed} collapsedHeight={COLLAPSED_HEIGHT}
-                class={className} style={style}
+{/* WidgetLayoutコンポーネントを使用して、カテゴリー一覧ウィジェットを描画します。
+  - name: ウィジェットのタイトル
+  - id: HTML要素のID
+  - isCollapsed: 折りたたむかどうか
+  - collapsedHeight: 折りたたんだときの高さ
+*/}
+<WidgetLayout 
+    name="カテゴリー" 
+    id="categories" 
+    isCollapsed={isCollapsed} 
+    collapsedHeight={COLLAPSED_HEIGHT}
+    class={className} 
+    style={style}
 >
+    {/* 取得したカテゴリーのリストをループして、それぞれをボタンとして表示 */}
     {categories.map((c) =>
         <ButtonLink
             url={c.url}
             badge={String(c.count)}
-            label={`View all posts in the ${c.name.trim()} category`}
+            label={`「${c.name.trim()}」カテゴリーの投稿をすべて表示`}
         >
+            {/* ボタンに表示するカテゴリー名（前後の空白を削除） */}
             {c.name.trim()}
         </ButtonLink>
     )}

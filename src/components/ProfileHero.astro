@@ -1,0 +1,106 @@
+---
+// ホーム上部に表示するプロフィールヒーロー
+// (プロフィール帯 + カテゴリ/シリーズのチップ列)
+import { getCollection } from "astro:content";
+import { Icon } from "astro-icon/components";
+import { profileConfig } from "../config";
+import { getCategoryList } from "../utils/content-utils";
+import { getCategoryUrl, url } from "../utils/url-utils";
+
+const categories = await getCategoryList();
+
+// シリーズごとの記事数を集計する
+const allPosts = await getCollection("posts", ({ data }) => {
+	return import.meta.env.PROD ? data.draft !== true : true;
+});
+const seriesCount: { [key: string]: number } = {};
+for (const post of allPosts) {
+	const s = post.data.series;
+	if (s) seriesCount[s] = (seriesCount[s] || 0) + 1;
+}
+const seriesList = Object.keys(seriesCount).sort((a, b) =>
+	a.toLowerCase().localeCompare(b.toLowerCase()),
+);
+---
+
+<div class="onload-animation px-6 md:px-2 pt-6 md:pt-8 pb-2">
+    <!-- プロフィール帯 -->
+    <div class="flex items-center gap-6 md:gap-7">
+        <img
+            src={url(profileConfig.avatar || "")}
+            alt={`${profileConfig.name}のアバター`}
+            class="w-20 h-20 md:w-[6.5rem] md:h-[6.5rem] rounded-full object-cover flex-shrink-0
+                   border-[3px] border-[var(--primary)] bg-[var(--card-bg)] transition"
+        />
+        <div class="flex flex-col gap-2">
+            <div class="text-[1.5rem] md:text-[1.875rem] font-extrabold leading-normal text-90 transition">
+                {profileConfig.name}の<span class="marker-highlight">開発ノート</span>
+            </div>
+            <div class="text-sm md:text-[0.9375rem] leading-relaxed text-75 transition">
+                {profileConfig.bio}。個人開発の成果物と、その過程で得た知見を記録しています。
+            </div>
+            <div class="flex flex-wrap gap-2 mt-1">
+                {profileConfig.links.map((link) => (
+                    <a href={link.url} target="_blank" rel="noopener" aria-label={link.name}
+                       class="transition flex items-center gap-1.5 rounded-full px-4 py-1.5 text-[0.8125rem] font-bold
+                              bg-[var(--card-bg)] border-[1.5px] border-[var(--card-border)] text-90
+                              hover:border-[var(--primary)] hover:text-[var(--primary)] active:scale-95"
+                    >
+                        <Icon name={link.icon} class="text-[1rem]"></Icon>
+                        {link.name}
+                    </a>
+                ))}
+            </div>
+        </div>
+    </div>
+
+    <!-- カテゴリ / シリーズのチップ列 -->
+    {(categories.length > 0 || seriesList.length > 0) && (
+        <div class="flex flex-wrap items-center gap-2 mt-6">
+            {categories.length > 0 && (
+                <div class="text-xs font-bold text-50 transition mr-1">カテゴリ</div>
+            )}
+            {categories.map((c) => (
+                <a href={c.url}
+                   class="transition rounded-full px-3.5 py-1 text-xs font-bold
+                          bg-[var(--btn-regular-bg)] text-[var(--btn-content)]
+                          hover:bg-[var(--btn-regular-bg-hover)] active:bg-[var(--btn-regular-bg-active)]"
+                >
+                    {c.name} {c.count}
+                </a>
+            ))}
+            {categories.length > 0 && seriesList.length > 0 && (
+                <div class="w-[1.5px] h-4 bg-[var(--card-border)] mx-1.5 transition"></div>
+            )}
+            {seriesList.length > 0 && (
+                <div class="text-xs font-bold text-50 transition mr-1">シリーズ</div>
+            )}
+            {seriesList.map((s) => (
+                <a href={url(`/series/?series=${encodeURIComponent(s)}`)}
+                   class="transition rounded-full px-3.5 py-1 text-xs font-bold
+                          bg-[oklch(0.95_0.06_95)] text-[oklch(0.48_0.1_95)]
+                          dark:bg-[oklch(0.35_0.05_95)] dark:text-[oklch(0.85_0.08_95)]
+                          hover:brightness-95 dark:hover:brightness-110"
+                >
+                    {s} {seriesCount[s]}
+                </a>
+            ))}
+        </div>
+    )}
+
+    <!-- 「最新の記事」見出し -->
+    <div class="flex items-center gap-3.5 mt-7 mb-1">
+        <div class="text-lg font-extrabold text-90 transition">最新の記事</div>
+        <div class="flex-grow h-[1.5px] bg-[var(--card-border)] transition"></div>
+    </div>
+</div>
+
+<style>
+.marker-highlight {
+    background: linear-gradient(transparent 62%, oklch(0.90 0.10 95) 62%);
+    padding: 0 2px;
+}
+:global(.dark) .marker-highlight {
+    background: linear-gradient(transparent 62%, oklch(0.45 0.08 95) 62%);
+}
+</style>

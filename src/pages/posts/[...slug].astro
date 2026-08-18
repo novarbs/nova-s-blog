@@ -4,12 +4,11 @@ import License from "@components/misc/License.astro";
 import Markdown from "@components/misc/Markdown.astro";
 import MainGridLayout from "@layouts/MainGridLayout.astro";
 import { getSortedPosts } from "@utils/content-utils";
-import { getDir, getPostUrlBySlug } from "@utils/url-utils";
+import { getCategoryUrl, getDir, getPostUrlBySlug, getTagUrl } from "@utils/url-utils";
 import { Icon } from "astro-icon/components";
 import { licenseConfig } from "src/config";
 import ImageWrapper from "../../components/misc/ImageWrapper.astro";
-import PostMetadata from "../../components/PostMeta.astro";
-import { profileConfig, siteConfig } from "../../config";
+import { profileConfig } from "../../config";
 import { formatDateToYYYYMMDD } from "../../utils/date-utils";
 
 import Giscus from "../../components/misc/Giscus.astro";
@@ -39,7 +38,7 @@ const jsonLd = {
 		url: Astro.site,
 	},
 	datePublished: formatDateToYYYYMMDD(entry.data.published),
-	inLanguage: "zh-CN",
+	inLanguage: "ja",
 	// TODO include cover image here
 };
 ---
@@ -49,33 +48,34 @@ const jsonLd = {
         <div id="post-container" class:list={["card-base z-10 px-6 md:px-9 pt-6 pb-4 relative w-full ",
             {}
         ]}>
-            <!-- word count and reading time -->
-            <div class="flex flex-row text-black/30 dark:text-white/30 gap-5 mb-3 transition onload-animation">
-                <div class="flex flex-row items-center">
-                    <div class="transition h-6 w-6 rounded-md bg-black/5 dark:bg-white/10 text-black/50 dark:text-white/50 flex items-center justify-center mr-2">
-                        <Icon name="material-symbols:notes-rounded"></Icon>
+            <!-- カテゴリ・シリーズのチップ -->
+            <div class="flex flex-wrap items-center gap-2 mb-4 onload-animation">
+                {entry.data.category && (
+                    <a href={getCategoryUrl(entry.data.category)}
+                       aria-label={`カテゴリ「${entry.data.category}」の記事一覧`}
+                       class="transition rounded-full px-3.5 py-1 text-xs font-bold
+                              bg-[var(--btn-regular-bg)] text-[var(--btn-content)]
+                              hover:bg-[var(--btn-regular-bg-hover)] active:bg-[var(--btn-regular-bg-active)]"
+                    >
+                        {entry.data.category}
+                    </a>
+                )}
+                {entry.data.series && (
+                    <div class="transition rounded-full px-3.5 py-1 text-xs font-bold
+                                bg-[oklch(0.95_0.06_95)] text-[oklch(0.48_0.1_95)]
+                                dark:bg-[oklch(0.35_0.05_95)] dark:text-[oklch(0.85_0.08_95)]">
+                        シリーズ: {entry.data.series}
                     </div>
-                    <div class="text-sm">{remarkPluginFrontmatter.words} 字</div>
-                </div>
-                <div class="flex flex-row items-center">
-                    <div class="transition h-6 w-6 rounded-md bg-black/5 dark:bg-white/10 text-black/50 dark:text-white/50 flex items-center justify-center mr-2">
-                        <Icon name="material-symbols:schedule-outline-rounded"></Icon>
-                    </div>
-                    <div class="text-sm">
-                        {remarkPluginFrontmatter.minutes} min
-                    </div>
-                </div>
+                )}
             </div>
 
             <!-- title -->
             <div class="relative onload-animation">
                 <div
                     data-pagefind-body data-pagefind-weight="10" data-pagefind-meta="title"
-                    class="transition w-full block font-bold mb-3
-                    text-3xl md:text-[2.25rem]/[2.75rem]
+                    class="transition w-full block font-extrabold mb-4
+                    text-2xl md:text-[1.875rem] leading-normal
                     text-black/90 dark:text-white/90
-                    md:before:w-1 before:h-5 before:rounded-md before:bg-[var(--primary)]
-                    before:absolute before:top-[0.75rem] before:left-[-1.125rem]
                 ">
                     {entry.data.title}
                 </div>
@@ -83,14 +83,28 @@ const jsonLd = {
 
             <!-- metadata -->
             <div class="onload-animation">
-                <PostMetadata
-                        class="mb-5"
-                        published={entry.data.published}
-                        updated={entry.data.updated}
-                        tags={entry.data.tags}
-                        category={entry.data.category}
-                ></PostMetadata>
-                {!entry.data.image && <div class="border-[var(--line-divider)] border-dashed border-b-[1px] mb-5"></div>}
+                <div class="flex flex-wrap items-center gap-x-5 gap-y-2 mb-5 text-sm text-50 transition">
+                    <div class="flex items-center gap-1.5">
+                        <Icon name="material-symbols:calendar-today-outline-rounded" class="text-[1rem]"></Icon>
+                        {formatDateToYYYYMMDD(entry.data.published)}
+                    </div>
+                    {entry.data.updated && entry.data.updated.getTime() !== entry.data.published.getTime() && (
+                        <div class="flex items-center gap-1.5">
+                            <Icon name="material-symbols:edit-calendar-outline-rounded" class="text-[1rem]"></Icon>
+                            {formatDateToYYYYMMDD(entry.data.updated)} 更新
+                        </div>
+                    )}
+                    <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
+                        {entry.data.tags.map((tag: string) => (
+                            <a href={getTagUrl(tag)} aria-label={`タグ「${tag.trim()}」の記事一覧`}
+                               class="transition text-xs hover:text-[var(--primary)]">
+                                # {tag.trim()}
+                            </a>
+                        ))}
+                    </div>
+                    <div class="text-xs">{remarkPluginFrontmatter.words} 文字 ・ {remarkPluginFrontmatter.minutes} 分</div>
+                </div>
+                <div class="border-[var(--card-border)] border-b-[1.5px] mb-6 transition"></div>
             </div>
 
             <!-- always show cover as long as it has one -->

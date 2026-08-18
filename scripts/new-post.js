@@ -1,52 +1,52 @@
-/* 这是一个用于创建带有 front-matter 的新文章 markdown 文件的脚本 */
+/* front-matter 付きの新規記事 markdown ファイルを作成するスクリプト */
 
 import fs from "fs"
 import path from "path"
 
-// 获取当前日期的函数，格式为 YYYY-MM-DD
+// 現在の日付を YYYY-MM-DD 形式で取得する関数
 function getDate() {
   const today = new Date()
   return today.toISOString().split("T")[0]
 }
 
-// 获取命令行参数
+// コマンドライン引数を取得
 const args = process.argv.slice(2)
 
-// 检查是否提供了文件名参数
+// ファイル名の引数が指定されているか確認
 if (args.length === 0) {
-  console.error(`错误: 未提供文件名参数
-用法: npm run new-post -- <filename>`)
-  process.exit(1) // 终止脚本并返回错误代码 1
+  console.error(`エラー: ファイル名の引数が指定されていません
+使い方: npm run new-post -- <filename>`)
+  process.exit(1) // スクリプトを終了しエラーコード 1 を返す
 }
 
 let fileName = args[0]
 
-// 如果文件名不包含 .md 或 .mdx 扩展名，则添加 .md
+// ファイル名に .md / .mdx 拡張子がなければ .md を追加
 const fileExtensionRegex = /\.(md|mdx)$/i
 if (!fileExtensionRegex.test(fileName)) {
   fileName += ".md"
 }
 
-// 定义目标目录
+// 出力先ディレクトリを定義
 const targetDir = "./src/content/posts/"
 
-// 使用 path.resolve 获取绝对路径
+// path.resolve で絶対パスを取得
 const fullPath = path.resolve(targetDir, fileName)
 
-// 检查文件是否已存在
+// ファイルが既に存在するか確認
 if (fs.existsSync(fullPath)) {
-  console.error(`错误: 文件 ${fullPath} 已存在`)
+  console.error(`エラー: ファイル ${fullPath} は既に存在します`)
   process.exit(1)
 }
 
-// 如果目录不存在，则创建目录
+// ディレクトリが存在しなければ作成
 const dirPath = path.dirname(fullPath)
 if (!fs.existsSync(dirPath)) {
   fs.mkdirSync(dirPath, { recursive: true })
 }
 
-// 生成 front-matter 内容
-// 使用文件名（去掉扩展名）作为默认标题
+// front-matter の内容を生成
+// ファイル名（拡張子を除く）をデフォルトのタイトルとして使用
 const title = fileName.replace(fileExtensionRegex, "")
 const content = `---
 title: ${title}
@@ -60,8 +60,8 @@ lang: ''
 ---
 `
 
-// 写入文件
+// ファイルに書き込み
 fs.writeFileSync(fullPath, content)
 
-// 输出成功消息
-console.log(`文章 ${fullPath} 已创建`)
+// 成功メッセージを出力
+console.log(`記事 ${fullPath} を作成しました`)

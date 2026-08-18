@@ -34,11 +34,11 @@ export async function GET(context: APIContext) {
 
 	for (const post of posts) {
 		const cleanedBody = stripInvalidXmlChars(post.body);
-		
+
 		const htmlString = markdownParser.render(cleanedBody);
-		
+
 		const html = htmlParser.parse(htmlString);
-		
+
 		const images = html.querySelectorAll('img');
 		for (const img of images) {
 			const src = img.getAttribute('src');
@@ -48,17 +48,17 @@ export async function GET(context: APIContext) {
 				let importPath: string | null = null;
 
 				if (src.startsWith('./')) {
-					// 获取文章所在的目录
+					// 記事があるディレクトリを取得
 					const postDir = url(post.id);
 					const prefixRemoved = src.slice(2);
-					// 构建正确的路径：/src/content/posts/{postDir}/{imageName}
+					// 正しいパスを構築: /src/content/posts/{postDir}/{imageName}
 					importPath = `/src/content/posts/${postDir}${prefixRemoved}`;
 				} else {
-					// 处理 ../image.jpg 的情况
+					// ../image.jpg のケースを処理
 					const postDir = url(post.id);
 					const cleaned = src.replace(/^\.\.\//, '');
-					// 向上一级目录
-					const parentDir = path.dirname(postDir.slice(0, -1)); // 移除末尾的/，然后获取父目录
+					// 一つ上のディレクトリへ
+					const parentDir = path.dirname(postDir.slice(0, -1)); // 末尾の/を削除して親ディレクトリを取得
 					importPath = `/src/content/posts/${parentDir === '.' ? '' : parentDir + '/'}${cleaned}`;
 				}
 
@@ -69,7 +69,7 @@ export async function GET(context: APIContext) {
 						img.setAttribute('src', new URL(optimizedImg.src, context.site).href);
 					} else {
 						console.warn(`Image not found in glob: ${importPath}`);
-						// 降级为相对URL
+						// 相対URLにフォールバック
 						img.setAttribute('src', new URL(src, context.site).href);
 					}
 				} catch (error) {
@@ -82,7 +82,7 @@ export async function GET(context: APIContext) {
 		}
 
 		const processedHtml = html.toString();
-		
+
 		const finalContent = stripInvalidXmlChars(processedHtml);
 
 		feed.push({
@@ -105,6 +105,6 @@ export async function GET(context: APIContext) {
 		description: siteConfig.subtitle || 'No description',
 		site: context.site,
 		items: feed,
-		customData: `<language>zh-CN</language>`,
+		customData: `<language>ja</language>`,
 	});
 }

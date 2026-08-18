@@ -3,17 +3,17 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
 import friendsData from "../config/friends.json";
 import Giscus from "../components/misc/Giscus.astro";
 
-// 从JSON文件加载友链数据
+// JSONファイルからリンクデータを読み込み
 const friends = friendsData;
 ---
-<MainGridLayout title="友链" description="友链">
+<MainGridLayout title="リンク" description="リンク">
     <div class="flex w-full rounded-[var(--radius-large)] overflow-hidden relative min-h-32">
         <div class="card-base z-10 px-9 py-6 relative w-full ">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-8 my-4">
                 {friends.map((friend) => (
                     <div class="flex flex-nowrap items-stretch h-28 gap-4 rounded-[var(--radius-large)]">
                         <div class="w-28 h-28 flex-shrink-0 rounded-lg overflow-hidden bg-zinc-200 dark:bg-zinc-900">
-                            <img src={friend.icon} alt={`${friend.name}的头像`} class="w-full h-full object-cover">
+                            <img src={friend.icon} alt={`${friend.name}のアイコン`} class="w-full h-full object-cover">
                         </div>
                         <div class="grow w-full">
                             <div class="font-bold transition text-lg text-neutral-900 dark:text-neutral-100 mb-1">{friend.name}</div>
@@ -28,7 +28,7 @@ const friends = friendsData;
                 ))}
             </div>
             <div class="mt-8 text-center">
-                <p class="text-sm text-neutral-600 dark:text-neutral-400">The end Ciallo~</p>
+                <p class="text-sm text-neutral-600 dark:text-neutral-400">ここまでお読みいただきありがとうございます 🙏</p>
             </div>
         </div>
     </div>

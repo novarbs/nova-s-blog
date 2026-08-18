@@ -56,12 +56,12 @@ const groups: { category: string; series: Series[] }[] = (() => {
 <div class="card-base px-8 py-6">
     {
         groups.map(group => {
-            // 计算该分类的总文章数
+            // このカテゴリの総記事数を計算
             const totalPosts = group.series.reduce((sum, s) => sum + s.count, 0);
             
             return (
             <div>
-                <!-- 分类名单独一行 - 左对齐 -->
+                <!-- カテゴリ名を単独行で表示 - 左揃え -->
                 <div class="w-full pb-2 pt-4 text-left">
                     <a aria-label={group.category} href={getCategoryUrl(group.category)}
                         class="btn-plain scale-animation rounded-lg h-11 font-bold px-2 active:scale-95 text-2xl inline-flex items-center"
@@ -70,20 +70,20 @@ const groups: { category: string; series: Series[] }[] = (() => {
                     </a>
                 </div>
                 
-                <!-- 分类行（包含总文章数、圆点和系列计数） -->
+                <!-- カテゴリ行（総記事数、ドット、シリーズ数を含む） -->
                 <div class="flex flex-row w-full items-center h-[3.75rem]">
-                    <!-- 左侧添加总文章数 -->
+                    <!-- 左側に総記事数を表示 -->
                     <div class="w-[20%] md:w-[15%] transition text-sm text-right text-50 flex flex-row justify-end items-center pr-2">
-                        <span class="font-semibold text-75">{totalPosts} 篇文章</span>
+                        <span class="font-semibold text-75">{totalPosts} 記事</span>
                     </div>
                     
-                    <!-- 大圆点 -->
+                    <!-- 大きな丸 -->
                     <div class="w-[15%] md:w-[10%]">
                         <div class="h-3 w-3 bg-none rounded-full outline outline-[var(--primary)] mx-auto -outline-offset-[2px] z-50 outline-3"></div>
                     </div>
                     
-                    <!-- 系列计数 -->
-                    <div class="w-[65%] md:w-[75%] transition text-left text-50">{group.series.length} 个专栏</div>
+                    <!-- シリーズ数 -->
+                    <div class="w-[65%] md:w-[75%] transition text-left text-50">{group.series.length} シリーズ</div>
                 </div>
                 
                 {group.series.map(s => (
@@ -94,7 +94,7 @@ const groups: { category: string; series: Series[] }[] = (() => {
                         <div class="flex flex-row justify-start items-center h-full">
                             <!-- count -->
                             <div class="w-[20%] md:w-[15%] transition text-sm text-right text-50">
-                                { s.count } 篇文章
+                                { s.count } 記事
                             </div>
                             <!-- dot and line -->
                             <div class="w-[15%] md:w-[10%] relative dash-line h-full flex items-center">

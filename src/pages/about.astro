@@ -1,23 +1,142 @@
 ---
-
-import { getEntry, render } from "astro:content";
-import Markdown from "@components/misc/Markdown.astro";
+import { Icon } from "astro-icon/components";
 import MainGridLayout from "../layouts/MainGridLayout.astro";
+import { profileConfig } from "../config";
+import { url } from "../utils/url-utils";
 
-const aboutPost = await getEntry("spec", "about");
+// 技術スタック(6分類)
+const skillGroups = [
+	{
+		name: "フロントエンド",
+		icon: "material-symbols:code-rounded",
+		skills: ["TypeScript", "React", "Next.js", "Astro", "Svelte", "Vite", "Tailwind CSS"],
+	},
+	{
+		name: "バックエンド",
+		icon: "material-symbols:dns-outline",
+		skills: ["Node.js", "Express", "Python", "FastAPI", "Flask", "OR-Tools", "スクレイピング"],
+	},
+	{
+		name: "モバイル / デスクトップ",
+		icon: "material-symbols:smartphone-outline",
+		skills: ["Swift / SwiftUI", "Capacitor", "Electron"],
+	},
+	{
+		name: "データベース",
+		icon: "material-symbols:database-outline",
+		skills: ["PostgreSQL", "SQLite / libSQL", "Redis", "Prisma", "Drizzle ORM"],
+	},
+	{
+		name: "インフラ / DevOps",
+		icon: "material-symbols:deployed-code-outline",
+		skills: ["Docker", "DevContainer", "Git / GitHub", "GitHub Actions", "Cloudflare", "Render"],
+	},
+	{
+		name: "AI / 外部サービス連携",
+		icon: "material-symbols:smart-toy-outline",
+		skills: ["Gemini API", "Claude API", "discord.js", "LINE Bot", "OAuth", "Stripe / RevenueCat"],
+	},
+];
 
-if (!aboutPost) {
-	throw new Error("About page content not found");
-}
-
-const { Content } = await render(aboutPost);
+const githubUrl = "https://github.com/novarbs";
 ---
-<MainGridLayout title="关于" description="关于">
-    <div class="flex w-full rounded-[var(--radius-large)] overflow-hidden relative min-h-32">
-        <div class="card-base z-10 px-9 py-6 relative w-full ">
-            <Markdown class="mt-2">
-                <Content />
-            </Markdown>
+<MainGridLayout title="About" description="リラのプロフィールと技術スタック">
+
+    <!-- プロフィールヘッダー -->
+    <div class="onload-animation flex items-center gap-6 md:gap-7 px-6 md:px-2 pt-6 md:pt-8 pb-6">
+        <img
+            src={url(profileConfig.avatar || "")}
+            alt={`${profileConfig.name}のアバター`}
+            class="w-24 h-24 md:w-[7rem] md:h-[7rem] rounded-full object-cover flex-shrink-0
+                   border-[3px] border-[var(--primary)] bg-[var(--card-bg)] transition"
+        />
+        <div class="flex flex-col gap-2">
+            <div class="text-[1.5rem] md:text-[1.75rem] font-extrabold text-90 transition">{profileConfig.name}</div>
+            <div class="text-sm md:text-[0.9375rem] leading-relaxed text-75 transition">
+                Web開発を中心に技術を学びながら、学んだことを実際のプロジェクトとしてアウトプットしています。個人開発の成果物と、設計思想・技術選定の理由・開発過程で得た学びをこのブログで公開しています。
+            </div>
+            <div class="flex flex-wrap gap-2 mt-1">
+                {profileConfig.links.map((link) => (
+                    <a href={link.url} target="_blank" rel="noopener" aria-label={link.name}
+                       class="transition flex items-center gap-1.5 rounded-full px-4 py-1.5 text-[0.8125rem] font-bold
+                              bg-[var(--card-bg)] border-[1.5px] border-[var(--card-border)] text-90
+                              hover:border-[var(--primary)] hover:text-[var(--primary)] active:scale-95"
+                    >
+                        <Icon name={link.icon} class="text-[1rem]"></Icon>
+                        {link.name}
+                    </a>
+                ))}
+            </div>
+        </div>
+    </div>
+
+    <!-- 技術スタック -->
+    <div class="onload-animation flex items-center gap-3.5 px-6 md:px-2 pb-4">
+        <div class="text-lg font-extrabold text-90 transition">技術スタック</div>
+        <div class="flex-grow h-[1.5px] bg-[var(--card-border)] transition"></div>
+    </div>
+    <div class="onload-animation grid grid-cols-1 md:grid-cols-2 gap-4 px-6 md:px-0">
+        {skillGroups.map((group) => (
+            <div class="card-base p-6 flex flex-col gap-3">
+                <div class="flex items-center gap-2.5">
+                    <Icon name={group.icon} class="text-[1.25rem] text-[var(--primary)]"></Icon>
+                    <div class="text-[0.9375rem] font-extrabold text-90 transition">{group.name}</div>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    {group.skills.map((skill) => (
+                        <div class="transition rounded-full px-3.5 py-1 text-xs font-bold
+                                    bg-[var(--btn-regular-bg)] text-[var(--btn-content)]">
+                            {skill}
+                        </div>
+                    ))}
+                </div>
+            </div>
+        ))}
+    </div>
+
+    <!-- 主な成果物 -->
+    <div class="onload-animation flex items-center gap-3.5 px-6 md:px-2 pt-8 pb-4">
+        <div class="text-lg font-extrabold text-90 transition">主な成果物</div>
+        <div class="flex-grow h-[1.5px] bg-[var(--card-border)] transition"></div>
+    </div>
+    <div class="onload-animation card-base p-6 md:p-7 flex flex-col md:flex-row md:items-center gap-5 mx-6 md:mx-0">
+        <div class="w-14 h-14 rounded-2xl bg-[var(--btn-regular-bg)] flex-shrink-0 flex items-center justify-center transition">
+            <Icon name="fa6-brands:github" class="text-[1.75rem] text-[var(--btn-content)]"></Icon>
+        </div>
+        <div class="flex flex-col gap-1 flex-grow min-w-0">
+            <div class="text-[1.0625rem] font-extrabold text-90 transition">github.com/novarbs</div>
+            <div class="text-sm leading-relaxed text-75 transition">
+                個人開発プロジェクトはGitHubで公開しています。各プロジェクトの詳細は「個人開発」カテゴリの記事で解説しています。
+            </div>
+        </div>
+        <a href={githubUrl} target="_blank" rel="noopener"
+           class="transition rounded-full px-6 py-2.5 text-[0.8125rem] font-bold text-center flex-shrink-0
+                  bg-[var(--primary)] text-white hover:opacity-90 active:scale-95"
+        >
+            リポジトリを見る
+        </a>
+    </div>
+
+    <!-- お問い合わせ -->
+    <div class="onload-animation flex items-center gap-3.5 px-6 md:px-2 pt-8 pb-4">
+        <div class="text-lg font-extrabold text-90 transition">お問い合わせ</div>
+        <div class="flex-grow h-[1.5px] bg-[var(--card-border)] transition"></div>
+    </div>
+    <div class="onload-animation card-base p-6 md:p-7 flex flex-col md:flex-row md:items-center md:justify-between gap-4 mx-6 md:mx-0 mb-2">
+        <div class="text-sm leading-relaxed text-75 transition">
+            ご質問やお仕事のご相談は、GitHubまたはXからお気軽にご連絡ください。
+        </div>
+        <div class="flex gap-2 flex-shrink-0">
+            {profileConfig.links.map((link) => (
+                <a href={link.url} target="_blank" rel="noopener" aria-label={link.name}
+                   class="transition flex items-center gap-1.5 rounded-full px-4 py-2 text-[0.8125rem] font-bold
+                          bg-[var(--page-bg)] border-[1.5px] border-[var(--card-border)] text-90
+                          hover:border-[var(--primary)] hover:text-[var(--primary)] active:scale-95"
+                >
+                    <Icon name={link.icon} class="text-[1rem]"></Icon>
+                    {link.name}
+                </a>
+            ))}
         </div>
     </div>
 </MainGridLayout>

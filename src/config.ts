@@ -12,18 +12,18 @@ export const siteConfig: SiteConfig = {
 	// サイトのメインタイトル
 	title: "Nova's Blog",
 	// サイトのサブタイトル
-	subtitle: "ゆるゆるプログラミング",
+	subtitle: "開発の学びをアウトプットするポートフォリオブログ",
 	// テーマカラーの設定
 	themeColor: {
-		// 色相 (0から360の値で指定します。例: 赤:0, 青:240, 紫:291)
-		hue: 291,
+		// 色相 (0から360の値で指定します。例: 赤:0, 青:240, 紫:291, ミントティール:190)
+		hue: 190,
 		// trueにすると訪問者がテーマカラーを変更できなくなります
 		fixed: false,
 	},
 	// ページ上部に表示されるバナー画像の設定
 	banner: {
 		// trueにするとバナー画像が表示されます
-		enable: true,
+		enable: false,
 		// バナー画像のパス ('/'から始めるとpublicフォルダからの相対パスになります)
 		src: "/banner.jpeg",
 		// 画像の表示位置 ('top', 'center', 'bottom'から選択)
@@ -82,7 +82,7 @@ export const profileConfig: ProfileConfig = {
 	// あなたの名前
 	name: "リラ",
 	// 簡単な自己紹介文
-	bio: "某S社のパートナーとして活動中",
+	bio: "Web開発を学び、日々の学びをアウトプットするエンジニア",
 	// SNSなどのリンクのリスト
 	links: [
 		/* リンクを追加する場合の例

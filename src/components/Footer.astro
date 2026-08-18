@@ -1,63 +1,15 @@
 ---
-import { profileConfig } from "../config";
-import { url } from "../utils/url-utils";
+
+import { profileConfig, siteConfig } from "../config";
 
 const currentYear = new Date().getFullYear();
 ---
 
-<div class="transition border-t border-black/10 dark:border-white/15 my-10 border-dashed mx-32"></div>
-
-<div class="transition border-dashed border-[oklch(85%_0.01_var(--hue))] dark:border-white/15 rounded-2xl mb-12 flex flex-col items-center justify-center px-6">
-    <div class="transition text-50 text-sm text-center">
-
-        <!-- 技術クレジット。'Powered by'はそのままにすることが多いですが、文脈に応じて変更可能です。 -->
-        Powered by
-        <a class="transition link text-[var(--primary)] font-medium" target="_blank" href="https://astro.build">Astro</a> &
-        <a class="transition link text-[var(--primary)] font-medium" target="_blank" href="https://github.com/yCENzh/Fuwari-yCENzh">Fuwari</a>
-        <br />
-        <!-- 以下のリンクは固有名詞のため、テキストは変更していません。 -->
-        <a class="transition link text-[var(--primary)] font-medium" target="_blank" href="https://icp.gov.moe/?keyword=20251413">萌ICP备20251413号</a>
-        <a href="https://icp.redcha.cn/beian/ICP-2025088520.html" title="茶ICP备2025088520号" target="_blank">茶ICP备2025088520号</a>
-        <br />
+<div class="transition flex items-center justify-between gap-4 border-t-[1.5px] border-[var(--card-border)] mt-8 mb-10 pt-5 px-6 md:px-2">
+    <div class="transition text-50 text-xs">
+        &copy; {currentYear} {profileConfig.name} — {siteConfig.title}
+    </div>
+    <div class="transition text-50 text-xs">
+        <a class="transition hover:text-[var(--primary)]" target="_blank" href="https://astro.build">Astro</a> で構築
     </div>
 </div>
-
-<style>
-  .transition {
-    transition: all 0.3s ease;
-  }
- 
-  .link {
-    text-decoration: none;
-    position: relative;
-    padding: 0 0.25rem;
-  }
- 
-  .link:hover {
-    text-decoration: underline;
-    text-decoration-color: var(--primary);
-    text-underline-offset: 0.25rem;
-  }
-
-  @media (prefers-color-scheme: dark) {
-    .text-50 {
-      color: rgba(255, 255, 255, 0.5);
-    }
-  }
-
-  @media (max-width: 768px) {
-    .mx-32 {
-      margin-left: 1.5rem;
-      margin-right: 1.5rem;
-    }
-   
-    .px-6 {
-      padding-left: 1.5rem;
-      padding-right: 1.5rem;
-    }
-   
-    .text-sm {
-      font-size: 0.8125rem;
-    }
-  }
-</style>

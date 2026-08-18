@@ -11,14 +11,14 @@ const configHTML = `
         data-emit-metadata="1"
         data-input-position="top"
         data-theme="https://giscus-dkh.pages.dev/A.css"
-        data-lang="zh-CN"
+        data-lang="ja"
         data-loading="lazy"
         crossorigin="anonymous"
         async>
 </script>
 `;
 
-// 使用正则表达式解析配置
+// 正規表現で設定を解析
 function extractAttribute(html: string, attr: string): string {
   const regex = new RegExp(`${attr}="([^"]*)"`, 'i');
   const match = html.match(regex);
@@ -37,7 +37,7 @@ const config = {
   emitMetadata: extractAttribute(configHTML, 'data-emit-metadata') || '0',
   inputPosition: extractAttribute(configHTML, 'data-input-position') || 'bottom',
   theme: extractAttribute(configHTML, 'data-theme') || 'preferred_color_scheme',
-  lang: extractAttribute(configHTML, 'data-lang') || 'zh-CN',
+  lang: extractAttribute(configHTML, 'data-lang') || 'ja',
   loading: extractAttribute(configHTML, 'data-loading') || 'lazy'
 };
 ---
@@ -45,7 +45,7 @@ const config = {
 <div id="giscus-container"></div>
 
 <script define:vars={{ config }}>
-  // 获取当前主题
+  // 現在のテーマを取得
   function getCurrentTheme() {
     if (config.theme !== 'preferred_color_scheme') {
       return config.theme;
@@ -53,10 +53,10 @@ const config = {
     return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
   }
 
-  // 加载 Giscus
+  // Giscus を読み込み
   function loadGiscus() {
     const container = document.getElementById('giscus-container');
-    if (!container || container.querySelector('script')) return; // 避免重复加载
+    if (!container || container.querySelector('script')) return; // 重複読み込みを防止
 
     const script = document.createElement('script');
     script.src = config.src || 'https://giscus.app/client.js';
@@ -78,7 +78,7 @@ const config = {
     container.appendChild(script);
   }
 
-  // 页面加载时初始化
+  // ページ読み込み時に初期化
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', loadGiscus);
   } else {

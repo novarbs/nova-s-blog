@@ -39,8 +39,8 @@ export default defineConfig({
     prefetchAll: false,
     defaultStrategy: "hover"
   },
-  
-  site: "https://fuwari.oh1.top/",
+
+  site: "https://example.com/", // デプロイ後に本番URLへ変更してください
   base: "/",
   trailingSlash: "always",
 
@@ -157,7 +157,7 @@ export default defineConfig({
       [
         rehypeExternalLinks,
         {
-        target: '_blank',
+          target: '_blank',
         },
       ],
       [

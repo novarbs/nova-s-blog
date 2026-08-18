@@ -10,10 +10,10 @@ export default function rehypeFigure() {
       const alt = node.properties?.alt;
       if (!src) return;
 
-      // 创建 <markdown-image> 组件节点
+      // <markdown-image> コンポーネントノードを作成
       const markdownImageNode = h('markdown-image', { src, alt: alt || '' });
 
-      // 替换
+      // 置き換え
       if (parent && typeof index === 'number') {
         parent.children[index] = markdownImageNode;
       }

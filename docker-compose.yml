@@ -3,18 +3,13 @@
 # -----------------------------------------
 
 services:
-  # サービス名（任意）
   web:
-    # 現在のディレクトリにあるDockerfileを使用してイメージをビルド
     build: .
-    # コンテナ名（任意）
-    container_name: my-portfolio-bun
-    # ポートのマッピング
-    # [ホストPCのポート]:[コンテナのポート]
+    container_name: novas-blog-dev
     ports:
       - "4321:4321"
-    # ボリュームのマウント
-    # [ホストPCのパス]:[コンテナのパス]
+    environment:
+      - HOST=0.0.0.0
     volumes:
       - .:/usr/src/app
       # node_modulesはマウント対象から除外（コンテナ内のものを使用するため）

@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 @layer components {
-  /* 自定义按钮样式 */
+  /* カスタムボタンのスタイル */
   .btn-regular-dark {
     @apply flex items-center justify-center;
     background-color: oklch(0.45 0.01 var(--hue));
@@ -37,7 +37,7 @@
     background-color: oklch(0.75 0.14 var(--hue));
   }
 
-  /* 全局可复用的链接样式 */
+  /* グローバルに再利用できるリンクのスタイル */
   .link {
     @apply relative bg-none font-medium underline decoration-dashed decoration-1 underline-offset-4 inline-block;
     color: var(--primary);
@@ -54,10 +54,18 @@
     }
   }
 
-  /* Markdown 特定样式 */
+  /* Markdown 固有のスタイル */
   .custom-md {
     h1 {
       @apply text-3xl;
+    }
+
+    h2 {
+      @apply relative pl-[1.125rem];
+    }
+    h2::before {
+      content: "";
+      @apply absolute left-0 top-[0.25em] w-1.5 h-[1.05em] rounded-md bg-[var(--primary)];
     }
 
     h1, h2, h3, h4, h5, h6 {
@@ -165,7 +173,7 @@
   }
 }
 
-/* 全局作用域中的 link 类 */
+/* グローバルスコープの link クラス */
 a.link,
 .link {
   @apply relative bg-none font-medium underline decoration-dashed decoration-1 underline-offset-4 inline-block;
@@ -182,7 +190,7 @@ a.link,
   }
 }
 
-/* 其他全局样式 */
+/* その他のグローバルスタイル */
 .custom-md img, #post-cover img {
   @apply cursor-zoom-in;
 }

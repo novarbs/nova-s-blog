@@ -10,19 +10,19 @@
     pre {
         overflow-x: auto;
         
-        /* 滚动条整体 */
+        /* スクロールバー全体 */
         &::-webkit-scrollbar {
-            height: 15px; /* 粗细 */
+            height: 15px; /* 太さ */
             border-radius: 0 0 8px 8px;
         }
         
-        /* 滚动条轨道 */
+        /* スクロールバーのトラック */
         &::-webkit-scrollbar-track {
             background: transparent;
             border-radius: 0 0 8px 8px;
         }
         
-        /* 滚动条滑块 */
+        /* スクロールバーのつまみ */
         &::-webkit-scrollbar-thumb {
             background: #808080;
             border-radius: 9px;

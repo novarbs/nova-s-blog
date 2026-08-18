@@ -1,13 +1,12 @@
 ---
-// 导入所需模块和组件
+// 必要なモジュールとコンポーネントをインポート
 import type { CollectionEntry } from "astro:content";
 import path from "node:path";
 import { Icon } from "astro-icon/components";
-import { getDir } from "../utils/url-utils";
+import { getCategoryUrl, getDir, getTagUrl } from "../utils/url-utils";
 import ImageWrapper from "./misc/ImageWrapper.astro";
-import PostMetadata from "./PostMeta.astro";
 
-// 定义组件属性接口
+// コンポーネントプロパティのインターフェース定義
 interface Props {
   class?: string;
   entry: CollectionEntry<"posts">;
@@ -24,13 +23,12 @@ interface Props {
   pinned?: boolean;
 }
 
-// 解构组件属性
+// コンポーネントプロパティを分割代入
 const {
   entry,
   title,
-  url,
+  url: postUrl,
   published,
-  updated,
   tags,
   category,
   image,
@@ -40,141 +38,120 @@ const {
 } = Astro.props;
 const className = Astro.props.class;
 
-// 检查是否有封面图片
+// カバー画像の有無を確認
 const hasCover = image !== undefined && image !== null && image !== "";
 
-// 封面图片宽度（CSS变量）
-const coverWidth = "28%";
+// シリーズ名（あれば）
+const series = entry.data.series;
 
-// 获取文章渲染后的额外元数据
-const { remarkPluginFrontmatter } = await entry.render();
+// 日付を「MM.DD」と「YYYY」に分けて表示する
+const pad = (n: number) => String(n).padStart(2, "0");
+const monthDay = `${pad(published.getMonth() + 1)}.${pad(published.getDate())}`;
+const year = String(published.getFullYear());
+
+// カテゴリの有無を事前計算
+const hasCategory = category && category.trim() !== "";
 ---
 
-<!-- 文章卡片容器 -->
-<div 
+<!-- 記事カードコンテナ -->
+<div
   class:list={[
-    "card-base flex flex-col-reverse md:flex-col w-full rounded-[var(--radius-large)] overflow-hidden relative", 
-    className
-  ]} 
+    "card-base flex w-full overflow-hidden relative p-6 md:p-7 gap-5 md:gap-6 items-start",
+    className,
+  ]}
   style={style}
 >
-  <!-- 内容区域 -->
-  <div 
-    class:list={[
-      "pl-6 md:pl-9 pr-6 md:pr-2 pt-6 md:pt-7 pb-6 relative", 
-      {
-        "w-full md:w-[calc(100%_-_52px_-_12px)]": !hasCover,
-        "w-full md:w-[calc(100%_-_var(--coverWidth)_-_12px)]": hasCover
-      }
-    ]}
-  >
-    {pinned && <div class="absolute top-2 left-2 text-[var(--primary)]">
-        <Icon name="mdi:pin" class="w-5 h-5" />
-    </div>}
-    <a 
-      href={url}
-      class="transition group w-full block font-bold mb-3 text-3xl text-90
+  {pinned && <div class="absolute top-3 right-3 text-[var(--primary)]">
+      <Icon name="mdi:pin" class="w-5 h-5" />
+  </div>}
+
+  <!-- 日付カラム -->
+  <div class="w-[4.5rem] md:w-[5.5rem] flex-shrink-0 flex flex-col items-center gap-0.5 pt-1">
+    <div class="text-[1.5rem] md:text-[1.75rem] font-extrabold leading-none text-[var(--primary)] transition">
+      {monthDay}
+    </div>
+    <div class="text-xs font-medium text-50 transition">
+      {year}
+    </div>
+  </div>
+
+  <!-- コンテンツ領域 -->
+  <div class="flex flex-col gap-2 min-w-0 flex-1">
+    <!-- カテゴリ・シリーズのチップ -->
+    <div class="flex flex-wrap items-center gap-2">
+      {hasCategory && (
+        <a
+          href={getCategoryUrl(category)}
+          aria-label={`カテゴリ「${category}」の記事一覧`}
+          class="transition rounded-full px-3 py-0.5 text-xs font-bold
+                 bg-[var(--btn-regular-bg)] text-[var(--btn-content)]
+                 hover:bg-[var(--btn-regular-bg-hover)] active:bg-[var(--btn-regular-bg-active)]"
+        >
+          {category}
+        </a>
+      )}
+      {series && (
+        <div class="transition rounded-full px-3 py-0.5 text-xs font-bold
+                    bg-[oklch(0.95_0.06_95)] text-[oklch(0.48_0.1_95)]
+                    dark:bg-[oklch(0.35_0.05_95)] dark:text-[oklch(0.85_0.08_95)]">
+          シリーズ: {series}
+        </div>
+      )}
+    </div>
+
+    <!-- タイトル -->
+    <a
+      href={postUrl}
+      class="transition group w-full block font-extrabold text-lg md:text-xl leading-relaxed text-90
         hover:text-[var(--primary)] dark:hover:text-[var(--primary)]
-        active:text-[var(--title-active)] dark:active:text-[var(--title-active)]
-        before:w-1 before:h-5 before:rounded-md before:bg-[var(--primary)]
-        before:absolute before:top-[35px] before:left-[18px] before:hidden md:before:block"
+        active:text-[var(--title-active)] dark:active:text-[var(--title-active)]"
     >
       {title}
-      <!-- 移动端箭头图标 -->
-      <Icon 
-        class="inline text-[2rem] text-[var(--primary)] md:hidden translate-y-0.5 absolute" 
-        name="material-symbols:chevron-right-rounded" 
+      <Icon
+        class="inline text-[1.5rem] text-[var(--primary)] md:hidden translate-y-0.5 absolute"
+        name="material-symbols:chevron-right-rounded"
       ></Icon>
-      <!-- 桌面端悬停箭头图标 -->
-      <Icon 
-        class="text-[var(--primary)] text-[2rem] transition hidden md:inline absolute translate-y-0.5 opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0" 
+      <Icon
+        class="text-[var(--primary)] text-[1.5rem] transition hidden md:inline absolute translate-y-0.5 opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0"
         name="material-symbols:chevron-right-rounded"
       ></Icon>
     </a>
 
-    <!-- 文章元数据 -->
-    <PostMetadata 
-      published={published} 
-      updated={updated} 
-      tags={tags} 
-      category={category} 
-      hideTagsForMobile={true} 
-      hideUpdateDate={true} 
-      class="mb-4"
-    ></PostMetadata>
-
-    <!-- 文章描述 -->
-    <div 
-      class:list={[
-        "transition text-75 mb-3.5 pr-4", 
-        {"line-clamp-2 md:line-clamp-1": !(description || remarkPluginFrontmatter.excerpt)}
-      ]}
-    >
-      {description || remarkPluginFrontmatter.excerpt}
+    <!-- 記事の説明 -->
+    <div class="transition text-sm leading-relaxed text-75 line-clamp-2">
+      {description}
     </div>
 
-    <!-- 字数统计和阅读时间 -->
-    <div class="text-sm text-black/30 dark:text-white/30 flex gap-4 transition">
-      <div>
-        {remarkPluginFrontmatter.words} 字
+    <!-- タグ -->
+    {tags && tags.length > 0 && (
+      <div class="flex flex-wrap gap-x-3.5 gap-y-1 mt-0.5">
+        {tags.map((tag) => (
+          <a
+            href={getTagUrl(tag)}
+            aria-label={`タグ「${tag.trim()}」の記事一覧`}
+            class="transition text-xs text-50 hover:text-[var(--primary)]"
+          >
+            # {tag.trim()}
+          </a>
+        ))}
       </div>
-      <div>|</div>
-      <div>
-        {remarkPluginFrontmatter.minutes} min
-      </div>
-    </div>
+    )}
   </div>
 
-  <!-- 封面图片区域 -->
+  <!-- カバー画像（ある場合のみ、右側にサムネイル表示） -->
   {hasCover && (
-    <a 
-      href={url} 
+    <a
+      href={postUrl}
       aria-label={title}
-      class:list={[
-        "group",
-        "max-h-[20vh] md:max-h-none mx-4 mt-4 -mb-2 md:mb-0 md:mx-0 md:mt-0",
-        "md:w-[var(--coverWidth)] relative md:absolute md:top-3 md:bottom-3 md:right-3 rounded-xl overflow-hidden active:scale-95"
-      ]}
+      class="group hidden md:block w-[8.5rem] h-[6rem] flex-shrink-0 relative rounded-xl overflow-hidden active:scale-95 transition"
     >
-      <!-- 封面图片遮罩层 -->
       <div class="absolute pointer-events-none z-10 w-full h-full group-hover:bg-black/30 group-active:bg-black/50 transition"></div>
-      <!-- 封面图片悬停时的箭头图标 -->
-      <div class="absolute pointer-events-none z-20 w-full h-full flex items-center justify-center">
-        <Icon 
-          name="material-symbols:chevron-right-rounded"
-          class="transition opacity-0 group-hover:opacity-100 scale-50 group-hover:scale-100 text-white text-5xl"
-        ></Icon>
-      </div>
-      <!-- 封面图片组件 -->
-      <ImageWrapper 
-        src={image} 
-        basePath={path.join("content/posts/", getDir(entry.id))} 
+      <ImageWrapper
+        src={image}
+        basePath={path.join("content/posts/", getDir(entry.id))}
         alt="Cover Image of the Post"
         class="w-full h-full"
       ></ImageWrapper>
     </a>
   )}
-
-  <!-- 无封面时的进入按钮 -->
-  {!hasCover && (
-    <a 
-      href={url} 
-      aria-label={title} 
-      class="!hidden md:!flex btn-regular w-[3.25rem]
-        absolute right-3 top-3 bottom-3 rounded-xl bg-[var(--enter-btn-bg)]
-        hover:bg-[var(--enter-btn-bg-hover)] active:bg-[var(--enter-btn-bg-active)] active:scale-95"
-    >
-      <Icon 
-        name="material-symbols:chevron-right-rounded"
-        class="transition text-[var(--primary)] text-4xl mx-auto"
-      ></Icon>
-    </a>
-  )}
 </div>
-
-<!-- 文章卡片之间的分隔线（仅在移动端显示） -->
-<div class="transition border-t-[1px] border-dashed mx-6 border-black/10 dark:border-white/[0.15] last:border-t-0 md:hidden"></div>
-
-<!-- 定义CSS变量（用于封面宽度） -->
-<style define:vars={{ coverWidth }}>
-</style>

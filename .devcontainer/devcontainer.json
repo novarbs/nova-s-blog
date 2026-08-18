@@ -1,12 +1,13 @@
 {
   "name": "Blog",
-  "dockerComposeFile": ["docker-compose.yaml"],
+  "dockerComposeFile": [
+    "docker-compose.yaml"
+  ],
   "service": "node",
   "workspaceFolder": "/home/vscode/app",
   "shutdownAction": "stopCompose",
   "remoteUser": "vscode",
-  "mounts": [
-  ],
+  "mounts": [],
   "features": {
     "ghcr.io/devcontainers/features/git:1": {
       "version": "2.39.0"
@@ -14,7 +15,6 @@
     "ghcr.io/devcontainers/features/common-utils:2": {
       "configureZshAsDefaultShell": true
     },
-    "ghcr.io/shyim/devcontainers-features/bun:0": {},
     "ghcr.io/devcontainers/features/node:1.5.0": {
       "version": "22.11.0"
     },
@@ -37,6 +37,7 @@
         "biomejs.biome",
         "eamodio.gitlens",
         "astro-build.astro-vscode",
+        "bradlc.vscode-tailwindcss",
         "wdhongtw.gpg-indicator",
         "svelte.svelte-vscode"
       ],
@@ -78,5 +79,8 @@
         }
       }
     }
-  }
+  },
+  "forwardPorts": [
+    4321
+  ]
 }

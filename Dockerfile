@@ -1,27 +1,26 @@
 # -----------------------------------------
-# Dockerfile (bun version)
+# Dockerfile (Node.js + pnpm)
 # -----------------------------------------
 
-# ベースとなるイメージを指定 (bunの公式イメージを使用)
-FROM oven/bun:1
+FROM node:22-slim
+
+# pnpmをインストール
+RUN corepack enable && corepack prepare pnpm@9.14.4 --activate
 
 # コンテナ内での作業ディレクトリを設定
 WORKDIR /usr/src/app
 
 # プロジェクトの依存関係ファイルを先にコピーする
-# bun.lockbが存在することで、より高速かつ確実に依存関係をインストールできる
-COPY package.json bun.lockb* ./
+COPY package.json pnpm-lock.yaml ./
 
 # 依存関係をインストール
-RUN bun install
+RUN pnpm install --no-frozen-lockfile
 
 # プロジェクトの全てのファイルをコピー
 COPY . .
 
-# アプリケーションが使用するポートを公開
-# ポートフォリオサイトでよく使われる3000番ポートを例としています
-EXPOSE 3000
+# Astro devサーバーのデフォルトポートを公開
+EXPOSE 4321
 
-# コンテナ起動時に実行するコマンド
-# package.json内の "scripts" に定義されている開発用コマンドを指定
-CMD ["bun", "run", "dev"]
+# コンテナ起動時に開発サーバーを起動
+CMD ["pnpm", "run", "dev"]

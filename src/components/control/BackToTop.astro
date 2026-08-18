@@ -1,4 +1,5 @@
 ---
+// Astroコンポーネントでアイコンを読み込むためのインポート
 import { Icon } from "astro-icon/components";
 ---
 
@@ -14,8 +15,8 @@ import { Icon } from "astro-icon/components";
                     fill="none"
                     stroke-width="2.5"
                     stroke-linecap="round"
-                    stroke-dasharray="125.66"
-                    stroke-dashoffset="125.66"
+                    stroke-dasharray="125.66"  
+                    stroke-dashoffset="125.66" 
                 />
             </svg>
             
@@ -29,75 +30,96 @@ import { Icon } from "astro-icon/components";
 </div>
 
 <style lang="stylus">
+// ラッパー要素のスタイル
 .back-to-top-wrapper
+    // この要素自体はクリックイベントを拾わないようにする
     pointer-events: none
+    // 他の要素より手前に表示
     z-index: 999
 
+// ボタン本体のスタイル
 .back-to-top-btn
     position: fixed
+    // ボタンはクリックイベントを拾うようにする
     pointer-events: auto
+    // 初期状態は非表示
     opacity: 0
     transform: scale(0.9)
+    // opacityとtransformの変化を滑らかにする
     transition: opacity 0.3s ease, transform 0.3s ease
+    // サイズと位置
     width: 3rem
     height: 3rem
     bottom: 1.5rem
     right: 1rem
     
+    // 横向きのスマートフォンなど、高さが狭い画面用のスタイル
     @media (max-width: 1023px) and (orientation: landscape)
         width: 2.5rem
         height: 2.5rem
         bottom: 1rem
         right: 1rem
     
+    // PCなどの大画面用のスタイル
     @media (min-width: 1024px)
         width: 3.75rem
         height: 3.75rem
         bottom: 2rem
         right: 2rem
     
+    // .showクラスが付与されたときの表示スタイル
     &.show
         opacity: 1
         transform: scale(1)
         
-        // 空闲状态（显示箭头时）半透明
+        // .idleクラスが付与されたとき（スクロールが止まっている状態）は半透明にする
         &.idle
             opacity: 0.5
             transition: opacity 0.3s ease
             
+            // アイドル状態でもホバーすれば不透明に戻る
             &:hover
                 opacity: 1
         
+        // ホバー時のアニメーション
         &:hover
+            // 矢印アイコンを非表示にする
             .icon-arrow
                 opacity: 0
                 transform: scale(0.5)
             
+            // パーセンテージテキストを表示する
             .percent-text
                 opacity: 1
                 transform: scale(1)
     
+    // .hideクラスが付与されたときはクリックできないようにする
     &.hide
         pointer-events: none
     
+    // ボタンがクリック（押下）されたときのスタイル
     &:active
         transform: scale(0.95)
         opacity: 1
 
+// ボタンのカード部分のスタイル
 .btn-card
     position: relative
     width: 100%
     height: 100%
-    border-radius: 50%
-    background: var(--card-bg)
+    border-radius: 50% // 円形にする
+    background: var(--card-bg) // 背景色（CSS変数）
+    // ガラスのようなすりガラス効果
     backdrop-filter: blur(12px)
     -webkit-backdrop-filter: blur(12px)
+    // 影
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1)
     border: 1px solid rgba(128, 128, 128, 0.1)
     cursor: pointer
     overflow: hidden
-    color: var(--primary)
+    color: var(--primary) // 文字色（CSS変数）
     
+    // 背景の不透明度を調整するための擬似要素
     &::before
         content: ''
         position: absolute
@@ -106,34 +128,43 @@ import { Icon } from "astro-icon/components";
         opacity: 0.9
         z-index: -1
 
+// SVGプログレスリングのスタイル
 .progress-ring
     position: absolute
     inset: 0
     width: 100%
     height: 100%
+    // SVGの開始位置を上（12時）にするため-90度回転
     transform: rotate(-90deg)
     pointer-events: none
     
     .progress-bar
-        stroke: var(--primary)
+        stroke: var(--primary) // 線の色（CSS変数）
+        // JSで直接値を変更するため、CSSトランジションは無効化
         transition: none
+        // 描画パフォーマンスを最適化
         will-change: stroke-dashoffset
         opacity: 0.9
 
+// 中央のコンテンツ（アイコンとテキスト）のコンテナ
 .btn-center
     position: absolute
     inset: 0
+    // 子要素を中央に配置するためのGridレイアウト
     display: grid
     place-items: center
     
+    // 子要素をすべて同じセルに配置して重ねる
     > *
         grid-area: 1 / 1
     
     .icon-arrow
         width: 1.5rem
         height: 1.5rem
+        // アニメーション設定
         transition: all 0.2s ease
         color: var(--primary)
+        // 初期状態は表示
         opacity: 1
         transform: scale(1)
         
@@ -145,33 +176,41 @@ import { Icon } from "astro-icon/components";
         font-size: 0.75rem
         font-weight: 600
         line-height: 1
+        // 初期状態は非表示
         opacity: 0
         transform: scale(0.5)
+        // アニメーション設定
         transition: all 0.2s ease
         color: var(--primary)
         
         @media (min-width: 1024px)
             font-size: 0.875rem
         
+        // 末尾に'%'を追加
         &::after
             content: '%'
 
-// 滚动时显示百分比
+// スクロール中に付与されるクラス
 .back-to-top-btn.scrolling
-    opacity: 1 !important  // 滚动时恢复不透明
+    // アイドル状態の半透明を上書きして、常に不透明にする
+    opacity: 1 !important
     
+    // 矢印を隠す
     .icon-arrow
         opacity: 0
         transform: scale(0.5)
     
+    // パーセンテージを表示する
     .percent-text
         opacity: 1
         transform: scale(1)
 
-// 点击动画
+// クリック完了時に付与されるクラス
 .back-to-top-btn.complete
+    // アニメーションを適用
     animation: gentlePulse 0.4s ease
     
+// クリック時の控えめな拡大アニメーション
 @keyframes gentlePulse
     0%, 100%
         transform: scale(1)
@@ -180,135 +219,158 @@ import { Icon } from "astro-icon/components";
 </style>
 
 <script>
+// 即時実行関数でスコープを汚染しないようにする
 (function() {
     'use strict';
     
+    // DOM要素の取得
     const btn = document.getElementById('back-to-top-btn');
+    // ボタンが存在しない場合は何もしない
     if (!btn) return;
     
     const progressBar = btn.querySelector('.progress-bar');
     const percentText = btn.querySelector('.percent-text');
     
-    // 常量配置
-    const CIRCUMFERENCE = 125.66;
-    const SCROLL_THRESHOLD = 200;
-    const IDLE_TIMEOUT = 500;  // 变为箭头的延迟时间
+    // 定数設定
+    const CIRCUMFERENCE = 125.66; // SVGの円周 (2 * PI * r = 2 * 3.1415 * 20)
+    const SCROLL_THRESHOLD = 200; // ボタンを表示し始めるスクロール位置 (px)
+    const IDLE_TIMEOUT = 500;     // スクロール停止後、アイドル状態（矢印表示）に戻るまでの時間 (ms)
     
-    // 状态管理
-    let scrollPercent = 0;
-    let isVisible = false;
-    let scrollTimer = null;
-    let isHovering = false;
-    let docHeight = 0;
-    let viewHeight = 0;
-    let lastScrollTop = 0;
-    let isScrolling = false;
+    // 状態管理用の変数
+    let scrollPercent = 0;   // 現在のスクロール率
+    let isVisible = false;   // ボタンが表示されているか
+    let scrollTimer = null;  // スクロール停止を検知するためのタイマー
+    let isHovering = false;  // マウスがボタン上にあるか
+    let docHeight = 0;       // ドキュメント全体のスクロール可能な高さ
+    let viewHeight = 0;      // ビューポート（表示領域）の高さ
+    let lastScrollTop = 0;   // 前回のスクロール位置
+    let isScrolling = false; // 現在スクロール中か
     
-    // 更新文档高度
+    // ドキュメントの高さを計算して更新する関数
     function updateDocHeight() {
         viewHeight = document.documentElement.clientHeight;
         docHeight = document.documentElement.scrollHeight - viewHeight;
     }
     
-    // 主更新函数
+    // ボタンの状態を更新するメインの関数
     function updateButton() {
+        // 現在のスクロール位置を取得
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        // ボタンを表示すべきかどうかを判定
         const shouldShow = scrollTop > SCROLL_THRESHOLD;
         
-        // 显示/隐藏按钮
+        // 表示状態が変化した場合の処理
         if (shouldShow !== isVisible) {
             isVisible = shouldShow;
             btn.classList.toggle('show', shouldShow);
             btn.classList.toggle('hide', !shouldShow);
             
-            // 首次显示时添加idle状态
+            // 初めて表示されるときに、アイドル状態（半透明）にする
             if (shouldShow) {
                 btn.classList.add('idle');
             }
         }
         
+        // ボタンが表示されていて、スクロール可能な高さがある場合
         if (shouldShow && docHeight > 0) {
-            // 计算并更新进度
+            // スクロール率を計算（0%〜100%）
             scrollPercent = Math.min(100, Math.round((scrollTop / docHeight) * 100));
             
+            // プログレスバーの表示を更新
             if (progressBar) {
                 const offset = CIRCUMFERENCE - (scrollPercent / 100) * CIRCUMFERENCE;
                 progressBar.style.strokeDashoffset = offset;
             }
             
+            // パーセンテージテキストを更新
             if (percentText) {
                 percentText.textContent = scrollPercent;
             }
             
-            // 检测滚动（避免微小抖动）
+            // スクロール中かどうかを検出（微小な動きは無視）
             const scrollDiff = Math.abs(scrollTop - lastScrollTop);
             if (scrollDiff > 2 && !isHovering) {
+                // スクロールが開始された
                 if (!isScrolling) {
                     isScrolling = true;
                     btn.classList.add('scrolling');
-                    btn.classList.remove('idle');  // 滚动时移除半透明
+                    btn.classList.remove('idle'); // スクロール中は半透明を解除
                 }
                 
+                // 既存のタイマーをクリア
                 clearTimeout(scrollTimer);
+                // 新しいタイマーを設定し、一定時間後にアイドル状態に戻す
                 scrollTimer = setTimeout(() => {
                     if (!isHovering) {
                         isScrolling = false;
                         btn.classList.remove('scrolling');
-                        btn.classList.add('idle');  // 恢复箭头时添加半透明
+                        btn.classList.add('idle'); // アイドル状態（半透明）に戻す
                     }
                 }, IDLE_TIMEOUT);
             }
             
+            // 今回のスクロール位置を保存
             lastScrollTop = scrollTop;
         }
     }
     
-    // 返回顶部
+    // ページトップへスクロールする関数
     function scrollToTop() {
+        // クリックアニメーション用のクラスを追加
         btn.classList.add('complete');
+        // 他の状態クラスを削除
         btn.classList.remove('scrolling', 'idle');
         isScrolling = false;
         
-        // 平滑重置进度条
+        // プログレスバーを滑らかに0%に戻す
         if (progressBar) {
             progressBar.style.transition = 'stroke-dashoffset 0.5s ease';
             progressBar.style.strokeDashoffset = CIRCUMFERENCE;
+            // アニメーションが終わったら、transitionを元に戻す
             setTimeout(() => {
                 progressBar.style.transition = 'none';
             }, 500);
         }
         
+        // パーセンテージを0にする
         if (percentText) {
             percentText.textContent = '0';
         }
         
+        // スムーズスクロールを実行
         window.scrollTo({ top: 0, behavior: 'smooth' });
         
+        // アニメーションが終わったらクラスを削除
         setTimeout(() => {
             btn.classList.remove('complete');
         }, 400);
     }
     
-    // 事件监听
-    window.addEventListener('scroll', () => {
-        requestAnimationFrame(updateButton);
-    }, { passive: true });
+    // --- イベントリスナーの設定 ---
     
+    // スクロールイベント
+    window.addEventListener('scroll', () => {
+        // パフォーマンスのためにrequestAnimationFrame内で更新
+        requestAnimationFrame(updateButton);
+    }, { passive: true }); // スムーズなスクロールを妨げないようにpassiveオプションを指定
+    
+    // ウィンドウリサイズイベント
     window.addEventListener('resize', () => {
         updateDocHeight();
         updateButton();
     });
     
+    // ボタンのクリックイベント
     btn.addEventListener('click', (e) => {
         e.preventDefault();
         scrollToTop();
     });
     
-    // 悬停处理
+    // マウスホバー処理
     btn.addEventListener('mouseenter', () => {
         isHovering = true;
-        btn.classList.remove('idle');  // 悬停时移除半透明
-        clearTimeout(scrollTimer);
+        btn.classList.remove('idle'); // ホバー中は半透明を解除
+        clearTimeout(scrollTimer);    // アイドル状態への移行をキャンセル
     });
     
     btn.addEventListener('mouseleave', () => {
@@ -316,20 +378,22 @@ import { Icon } from "astro-icon/components";
         btn.classList.remove('scrolling');
         isScrolling = false;
         
-        // 离开时如果不在滚动，添加半透明
+        // マウスが離れた時点で、表示されていればアイドル状態に戻す
         if (!isScrolling && isVisible) {
             btn.classList.add('idle');
         }
     });
     
-    // 触摸设备支持
+    // タッチデバイス向けのサポート
     let touchTimer;
     btn.addEventListener('touchstart', () => {
+        // タッチ開始をホバー開始とみなす
         isHovering = true;
         btn.classList.remove('idle');
         clearTimeout(scrollTimer);
         clearTimeout(touchTimer);
         
+        // 2秒間触れ続けた場合は、ホバー状態を解除してアイドルに戻す
         touchTimer = setTimeout(() => {
             isHovering = false;
             btn.classList.remove('scrolling');
@@ -338,11 +402,14 @@ import { Icon } from "astro-icon/components";
         }, 2000);
     }, { passive: true });
     
-    // 初始化
+    // --- 初期化処理 ---
+    
+    // ページの初期高さを計算
     updateDocHeight();
+    // ボタンの初期状態を設定
     updateButton();
     
-    // 页面可见性改变时更新
+    // 別のタブから戻ってきたときに高さを再計算する
     document.addEventListener('visibilitychange', () => {
         if (!document.hidden) {
             updateDocHeight();

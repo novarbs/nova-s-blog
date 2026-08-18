@@ -3,45 +3,45 @@ import { Icon } from "astro-icon/components";
 import { formatDateToYYYYMMDD } from "../utils/date-utils";
 import { getCategoryUrl, getTagUrl } from "../utils/url-utils";
 
-// 组件属性接口定义
+// コンポーネントプロパティのインターフェース定義
 interface Props {
-  class: string; // 外部传入的CSS类名
-  published: Date; // 文章发布日期（必需）
-  updated?: Date; // 文章最后更新日期（可选）
-  tags: string[]; // 文章标签数组
-  category: string | null; // 文章分类（可为空）
-  hideTagsForMobile?: boolean; // 是否在移动端隐藏标签
-  hideUpdateDate?: boolean; // 是否隐藏更新日期
+  class: string; // 外部から渡されるCSSクラス名
+  published: Date; // 記事の公開日（必須）
+  updated?: Date; // 記事の最終更新日（任意）
+  tags: string[]; // 記事のタグ配列
+  category: string | null; // 記事のカテゴリ（nullの場合あり）
+  hideTagsForMobile?: boolean; // モバイル端末でタグを非表示にするか
+  hideUpdateDate?: boolean; // 更新日を非表示にするか
 }
 
-// 解构Astro.props获取参数
+// Astro.propsからパラメータを分割代入
 const {
-  class: className, // 重命名避免与JS关键字冲突
+  class: className, // JSのキーワードとの衝突を回避するためリネーム
   published,
   updated,
   tags,
   category,
-  hideTagsForMobile = false, // 默认在移动端显示标签
-  hideUpdateDate = false, // 默认显示更新日期
+  hideTagsForMobile = false, // デフォルトではモバイルでもタグを表示
+  hideUpdateDate = false, // デフォルトでは更新日を表示
 } = Astro.props;
 
-// 预计算更新日期是否需要显示
+// 更新日を表示するかどうかを事前計算
 const shouldShowUpdated = 
-  !hideUpdateDate && // 未设置隐藏更新日期
-  updated && // 存在更新日期
-  updated.getTime() !== published.getTime(); // 更新日期与发布日期不同
+  !hideUpdateDate && // 更新日の非表示設定がない
+  updated && // 更新日が存在する
+  updated.getTime() !== published.getTime(); // 更新日と公開日が異なる
 
-// 预计算是否有标签
+// タグの有無を事前計算
 const hasTags = tags && tags.length > 0;
 
-// 预计算是否有分类
+// カテゴリの有無を事前計算
 const hasCategory = category && category.trim() !== "";
 ---
 
 <!-- 
-  博客文章元数据容器
-  显示：发布日期、更新日期、分类和标签
-  响应式设计：在移动端可隐藏标签
+  ブログ記事メタデータコンテナ
+  表示内容：公開日、更新日、カテゴリ、タグ
+  レスポンシブ対応：モバイル端末でタグを非表示にする設定あり
 -->
 <div 
   class:list={[
@@ -50,41 +50,41 @@ const hasCategory = category && category.trim() !== "";
     className
   ]}
 >
-  <!-- 发布日期 -->
+  <!-- 公開日 -->
   <div class="flex items-center">
     <div class="meta-icon">
-      <!-- 日历图标 -->
+      <!-- カレンダーアイコン -->
       <Icon name="material-symbols:calendar-today-outline-rounded" class="text-xl" />
     </div>
-    <!-- 格式化后的日期 -->
+    <!-- フォーマット済みの日付 -->
     <span class="text-50 text-sm font-medium">
       {formatDateToYYYYMMDD(published)}
     </span>
   </div>
 
-  <!-- 更新日期（条件渲染） -->
+  <!-- 更新日（条件付きレンダリング） -->
   {shouldShowUpdated && (
     <div class="flex items-center">
       <div class="meta-icon">
-        <!-- 编辑图标 -->
+        <!-- 編集アイコン -->
         <Icon name="material-symbols:edit-calendar-outline-rounded" class="text-xl" />
       </div>
-      <!-- 格式化后的更新日期 -->
+      <!-- フォーマット済みの更新日 -->
       <span class="text-50 text-sm font-medium">
         {formatDateToYYYYMMDD(updated)}
       </span>
     </div>
   )}
 
-  <!-- 文章分类（仅在有分类时显示） -->
+  <!-- 記事カテゴリ（カテゴリがある場合のみ表示） -->
   {hasCategory && (
     <div class="flex items-center">
       <div class="meta-icon">
-        <!-- 书本图标 -->
+        <!-- 書籍アイコン -->
         <Icon name="material-symbols:book-2-outline-rounded" class="text-xl" />
       </div>
       <div class="flex flex-row flex-nowrap items-center">
-        <!-- 分类链接 -->
+        <!-- カテゴリリンク -->
         <a 
           href={getCategoryUrl(category)} 
           aria-label={`View all posts in the ${category} category`}
@@ -97,30 +97,30 @@ const hasCategory = category && category.trim() !== "";
     </div>
   )}
 
-  <!-- 文章标签（仅在有标签时显示） -->
+  <!-- 記事タグ（タグがある場合のみ表示） -->
   {hasTags && (
     <div 
       class:list={[
         "items-center",
         {
-          "flex": !hideTagsForMobile, // 在PC端和未隐藏时显示
-          "hidden md:flex": hideTagsForMobile // 在移动端隐藏，中等屏幕以上显示
+          "flex": !hideTagsForMobile, // PC端末および非表示でない場合に表示
+          "hidden md:flex": hideTagsForMobile // モバイルでは非表示、中画面以上で表示
         }
       ]}
     >
       <div class="meta-icon">
-        <!-- 标签图标 -->
+        <!-- タグアイコン -->
         <Icon name="material-symbols:tag-rounded" class="text-xl" />
       </div>
       <div class="flex flex-row flex-nowrap items-center">
-        <!-- 渲染标签列表 -->
+        <!-- タグリストをレンダリング -->
         {tags.map((tag, index) => (
           <>
-            {/* 在标签之间添加分隔符（第一个标签前不添加） */}
+            {/* タグ間にセパレーターを追加（最初のタグの前には追加しない） */}
             {index > 0 && (
               <div class="mx-1.5 text-[var(--meta-divider)] text-sm">/</div>
             )}
-            {/* 单个标签链接 */}
+            {/* 個別のタグリンク */}
             <a
               href={getTagUrl(tag)}
               aria-label={`View all posts with the ${tag.trim()} tag`}

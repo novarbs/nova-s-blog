@@ -1,4 +1,4 @@
-/* 导入导航栏半透明效果样式 */
+/* ナビバー半透明効果のスタイルをインポート */
 @import './navbar-transparent.css';
 
 @tailwind base;
@@ -7,7 +7,7 @@
 
 @layer components {
     .card-base {
-        @apply rounded-[var(--radius-large)] overflow-hidden bg-[var(--card-bg)] transition;
+        @apply rounded-[var(--radius-large)] overflow-hidden bg-[var(--card-bg)] transition border-[1.5px] border-[var(--card-border)];
     }
     h1, h2, h3, h4, h5, h6, p, a, span, li, ul, ol, blockquote, code, pre, table, th, td, strong {
         @apply transition;
@@ -32,7 +32,11 @@
         @apply -translate-y-1 opacity-0 pointer-events-none
     }
     .search-panel mark {
-        @apply bg-transparent text-[var(--primary)]
+        @apply text-[inherit] font-bold px-[1px];
+        background: linear-gradient(transparent 55%, oklch(0.90 0.10 95) 55%);
+    }
+    .dark .search-panel mark {
+        background: linear-gradient(transparent 55%, oklch(0.45 0.08 95) 55%);
     }
 
     .btn-card {

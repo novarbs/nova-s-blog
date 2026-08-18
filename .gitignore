@@ -29,3 +29,5 @@ venv
 .aider*
 .codebuddy/
 cache/
+# デザインモックの作業ファイル(Claude Designキャンバス用)
+design-drafts/

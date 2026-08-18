@@ -27,6 +27,7 @@
     "@expressive-code/plugin-line-numbers": "^0.41.3",
     "@fancyapps/ui": "^6.0.29",
     "@fontsource-variable/jetbrains-mono": "^5.2.6",
+    "@fontsource/m-plus-rounded-1c": "^5.3.0",
     "@fontsource/roboto": "^5.2.6",
     "@iconify-json/fa6-brands": "^1.2.6",
     "@iconify-json/fa6-regular": "^1.2.4",

@@ -1,17 +1,17 @@
 /**
- * 导航栏半透明效果样式
+ * ナビゲーションバーの半透明効果スタイル
  * Navbar Translucent Effects Styles
- * 只有当页面启用banner时才应用半透明效果
+ * ページでbannerが有効な場合のみ半透明効果を適用する
  */
 
-/* 默认导航栏样式 - 保持原有的card-base样式 */
+/* デフォルトのナビゲーションバースタイル - 元のcard-baseスタイルを維持 */
 #navbar > div {
     background: var(--card-bg);
     border-radius: var(--radius-large);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* 当页面有banner时，导航栏使用半透明效果 */
+/* ページにbannerがある場合、ナビゲーションバーに半透明効果を適用 */
 #banner-wrapper ~ * #navbar > div,
 body:has(#banner-wrapper) #navbar > div {
     backdrop-filter: blur(20px) !important;
@@ -22,7 +22,7 @@ body:has(#banner-wrapper) #navbar > div {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
-/* 暗色主题下的半透明效果 */
+/* ダークテーマ時の半透明効果 */
 :root.dark #banner-wrapper ~ * #navbar > div,
 :root.dark body:has(#banner-wrapper) #navbar > div {
     background: rgba(0, 0, 0, 0.55) !important;
@@ -30,7 +30,7 @@ body:has(#banner-wrapper) #navbar > div {
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2) !important;
 }
 
-/* 显示设置面板的半透明效果 */
+/* 表示設定パネルの半透明効果 */
 #banner-wrapper ~ * #display-setting,
 body:has(#banner-wrapper) #display-setting {
     backdrop-filter: blur(20px) !important;
@@ -39,7 +39,7 @@ body:has(#banner-wrapper) #display-setting {
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1) !important;
 }
 
-/* 暗色主题下的显示设置面板半透明效果 */
+/* ダークテーマ時の表示設定パネルの半透明効果 */
 :root.dark #banner-wrapper ~ * #display-setting,
 :root.dark body:has(#banner-wrapper) #display-setting {
     background: rgba(0, 0, 0, 0.55) !important;
@@ -47,7 +47,7 @@ body:has(#banner-wrapper) #display-setting {
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2) !important;
 }
 
-/* 主题切换保护 - 禁用过渡动画以防止闪烁 */
+/* テーマ切り替え時の保護 - ちらつき防止のためトランジションを無効化 */
 .is-theme-transitioning #navbar > div,
 .is-theme-transitioning #banner-wrapper ~ * #navbar > div,
 .is-theme-transitioning body:has(#banner-wrapper) #navbar > div,
