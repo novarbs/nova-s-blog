@@ -4,14 +4,18 @@ import License from "@components/misc/License.astro";
 import Markdown from "@components/misc/Markdown.astro";
 import MainGridLayout from "@layouts/MainGridLayout.astro";
 import { getSortedPosts } from "@utils/content-utils";
-import { getCategoryUrl, getDir, getPostUrlBySlug, getTagUrl } from "@utils/url-utils";
+import {
+	getCategoryUrl,
+	getDir,
+	getPostUrlBySlug,
+	getTagUrl,
+} from "@utils/url-utils";
 import { Icon } from "astro-icon/components";
 import { licenseConfig } from "src/config";
+import Giscus from "../../components/misc/Giscus.astro";
 import ImageWrapper from "../../components/misc/ImageWrapper.astro";
 import { profileConfig } from "../../config";
 import { formatDateToYYYYMMDD } from "../../utils/date-utils";
-
-import Giscus from "../../components/misc/Giscus.astro";
 
 export async function getStaticPaths() {
 	const blogEntries = await getSortedPosts();

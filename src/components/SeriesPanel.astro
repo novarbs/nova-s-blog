@@ -1,56 +1,58 @@
 ---
-import { UNCATEGORIZED } from '@constants/constants'
-import { getSortedPosts } from '../utils/content-utils'
-import { getPostUrlBySlug } from '../utils/url-utils'
-import { getCategoryUrl } from '../utils/url-utils'
+import { UNCATEGORIZED } from "@constants/constants";
+import { getSortedPosts } from "../utils/content-utils";
+import { getCategoryUrl, getPostUrlBySlug } from "../utils/url-utils";
 
 interface Props {
-  keyword?: string
-  tags?: string[]
-  categories?: string[]
+	keyword?: string;
+	tags?: string[];
+	categories?: string[];
 }
 
-let posts = await getSortedPosts()
+let posts = await getSortedPosts();
 
 interface Series {
-  count: number
-  name: string
-  posts: typeof posts
+	count: number;
+	name: string;
+	posts: typeof posts;
 }
 
 const groups: { category: string; series: Series[] }[] = (() => {
-  const groupedSeries = posts.reduce(
-    (grouped: { [category: string]: {[seriesName: string]: Series} }, post) => {
-      const category = post.data.category || UNCATEGORIZED
-      const series = post.data.series || UNCATEGORIZED
-      if (category == UNCATEGORIZED || series === UNCATEGORIZED) {
-        return grouped
-      }
-      if (!grouped[category]) {
-        grouped[category] = {}
-      }
-      if (!grouped[category][series]) {
-        grouped[category][series] = {
-          count: 0,
-          name: series,
-          posts: [],
-        }
-      }
-      grouped[category][series].count++
-      grouped[category][series].posts.push(post)
-      return grouped
-    },
-    {},
-  )
+	const groupedSeries = posts.reduce(
+		(
+			grouped: { [category: string]: { [seriesName: string]: Series } },
+			post,
+		) => {
+			const category = post.data.category || UNCATEGORIZED;
+			const series = post.data.series || UNCATEGORIZED;
+			if (category === UNCATEGORIZED || series === UNCATEGORIZED) {
+				return grouped;
+			}
+			if (!grouped[category]) {
+				grouped[category] = {};
+			}
+			if (!grouped[category][series]) {
+				grouped[category][series] = {
+					count: 0,
+					name: series,
+					posts: [],
+				};
+			}
+			grouped[category][series].count++;
+			grouped[category][series].posts.push(post);
+			return grouped;
+		},
+		{},
+	);
 
-  // convert the object to an array
-  const groupedSeriesArray = Object.keys(groupedSeries).map(key => ({
-    category: key,
-    series: Object.values(groupedSeries[key]),
-  }))
+	// convert the object to an array
+	const groupedSeriesArray = Object.keys(groupedSeries).map((key) => ({
+		category: key,
+		series: Object.values(groupedSeries[key]),
+	}));
 
-  return groupedSeriesArray
-})()
+	return groupedSeriesArray;
+})();
 ---
 
 <div class="card-base px-8 py-6">

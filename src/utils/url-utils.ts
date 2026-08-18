@@ -19,11 +19,7 @@ export function getTagUrl(tag: string): string {
 }
 
 export function getCategoryUrl(category: string | null): string {
-	if (
-		!category ||
-		category.trim() === ""
-	)
-		return url("/archive/");
+	if (!category || category.trim() === "") return url("/archive/");
 	return url(`/archive/?category=${encodeURIComponent(category.trim())}`);
 }
 

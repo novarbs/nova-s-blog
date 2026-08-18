@@ -20,25 +20,27 @@ const configHTML = `
 
 // 正規表現で設定を解析
 function extractAttribute(html: string, attr: string): string {
-  const regex = new RegExp(`${attr}="([^"]*)"`, 'i');
-  const match = html.match(regex);
-  return match ? match[1] : '';
+	const regex = new RegExp(`${attr}="([^"]*)"`, "i");
+	const match = html.match(regex);
+	return match ? match[1] : "";
 }
 
 const config = {
-  src: extractAttribute(configHTML, 'src'),
-  repo: extractAttribute(configHTML, 'data-repo'),
-  repoId: extractAttribute(configHTML, 'data-repo-id'),
-  category: extractAttribute(configHTML, 'data-category'),
-  categoryId: extractAttribute(configHTML, 'data-category-id'),
-  mapping: extractAttribute(configHTML, 'data-mapping') || 'pathname',
-  strict: extractAttribute(configHTML, 'data-strict') || '0',
-  reactionsEnabled: extractAttribute(configHTML, 'data-reactions-enabled') || '1',
-  emitMetadata: extractAttribute(configHTML, 'data-emit-metadata') || '0',
-  inputPosition: extractAttribute(configHTML, 'data-input-position') || 'bottom',
-  theme: extractAttribute(configHTML, 'data-theme') || 'preferred_color_scheme',
-  lang: extractAttribute(configHTML, 'data-lang') || 'ja',
-  loading: extractAttribute(configHTML, 'data-loading') || 'lazy'
+	src: extractAttribute(configHTML, "src"),
+	repo: extractAttribute(configHTML, "data-repo"),
+	repoId: extractAttribute(configHTML, "data-repo-id"),
+	category: extractAttribute(configHTML, "data-category"),
+	categoryId: extractAttribute(configHTML, "data-category-id"),
+	mapping: extractAttribute(configHTML, "data-mapping") || "pathname",
+	strict: extractAttribute(configHTML, "data-strict") || "0",
+	reactionsEnabled:
+		extractAttribute(configHTML, "data-reactions-enabled") || "1",
+	emitMetadata: extractAttribute(configHTML, "data-emit-metadata") || "0",
+	inputPosition:
+		extractAttribute(configHTML, "data-input-position") || "bottom",
+	theme: extractAttribute(configHTML, "data-theme") || "preferred_color_scheme",
+	lang: extractAttribute(configHTML, "data-lang") || "ja",
+	loading: extractAttribute(configHTML, "data-loading") || "lazy",
 };
 ---
 

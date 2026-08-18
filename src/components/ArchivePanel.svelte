@@ -7,18 +7,18 @@ export let sortedPosts: Post[] = [];
 
 // 記事と年ごとのグループのデータ構造を定義
 interface Post {
-    slug: string;
-    data: {
-        title: string;
-        tags: string[];
-        category?: string;
-        published: Date;
-    };
+	slug: string;
+	data: {
+		title: string;
+		tags: string[];
+		category?: string;
+		published: Date;
+	};
 }
 
 interface Group {
-    year: number;
-    posts: Post[];
+	year: number;
+	posts: Post[];
 }
 
 // グループ化された記事データを格納
@@ -30,10 +30,10 @@ let groups: Group[] = [];
  * @returns フォーマットされた日付文字列
  */
 function formatDate(date: Date) {
-    return `${(date.getMonth() + 1).toString().padStart(2, "0")}-${date
-        .getDate()
-        .toString()
-        .padStart(2, "0")}`;
+	return `${(date.getMonth() + 1).toString().padStart(2, "0")}-${date
+		.getDate()
+		.toString()
+		.padStart(2, "0")}`;
 }
 
 /**
@@ -42,55 +42,59 @@ function formatDate(date: Date) {
  * @returns フォーマットされたタグ文字列
  */
 function formatTag(tagList: string[]) {
-    return tagList?.map((t) => `#${t}`).join(" ") || "";
+	return tagList?.map((t) => `#${t}`).join(" ") || "";
 }
 
 onMount(async () => {
-    // URLのクエリパラメータからフィルタリング条件を取得
-    const params = new URLSearchParams(window.location.search);
-    const urlTags = params.getAll("tag");
-    const urlCategories = params.getAll("category");
-    const uncategorized = params.has("uncategorized");
+	// URLのクエリパラメータからフィルタリング条件を取得
+	const params = new URLSearchParams(window.location.search);
+	const urlTags = params.getAll("tag");
+	const urlCategories = params.getAll("category");
+	const uncategorized = params.has("uncategorized");
 
-    // 全ての記事で初期化
-    let filteredPosts: Post[] = [...sortedPosts];
+	// 全ての記事で初期化
+	let filteredPosts: Post[] = [...sortedPosts];
 
-    // タグでフィルタリング
-    if (urlTags.length > 0) {
-        filteredPosts = filteredPosts.filter(
-            (post) =>
-                Array.isArray(post.data.tags) &&
-                urlTags.some((tag) => post.data.tags.includes(tag))
-        );
-    }
+	// タグでフィルタリング
+	if (urlTags.length > 0) {
+		filteredPosts = filteredPosts.filter(
+			(post) =>
+				Array.isArray(post.data.tags) &&
+				urlTags.some((tag) => post.data.tags.includes(tag)),
+		);
+	}
 
-    // カテゴリでフィルタリング
-    if (urlCategories.length > 0) {
-        filteredPosts = filteredPosts.filter(
-            (post) => post.data.category && urlCategories.includes(post.data.category)
-        );
-    }
+	// カテゴリでフィルタリング
+	if (urlCategories.length > 0) {
+		filteredPosts = filteredPosts.filter(
+			(post) =>
+				post.data.category && urlCategories.includes(post.data.category),
+		);
+	}
 
-    // 未分類の記事をフィルタリング
-    if (uncategorized) {
-        filteredPosts = filteredPosts.filter((post) => !post.data.category);
-    }
+	// 未分類の記事をフィルタリング
+	if (uncategorized) {
+		filteredPosts = filteredPosts.filter((post) => !post.data.category);
+	}
 
-    // 記事を年ごとにグループ化
-    const grouped = filteredPosts.reduce((acc, post) => {
-        const year = post.data.published.getFullYear();
-        if (!acc[year]) acc[year] = [];
-        acc[year].push(post);
-        return acc;
-    }, {} as Record<number, Post[]>);
+	// 記事を年ごとにグループ化
+	const grouped = filteredPosts.reduce(
+		(acc, post) => {
+			const year = post.data.published.getFullYear();
+			if (!acc[year]) acc[year] = [];
+			acc[year].push(post);
+			return acc;
+		},
+		{} as Record<number, Post[]>,
+	);
 
-    // グループ化されたオブジェクトを配列に変換し、年で降順にソート
-    groups = Object.entries(grouped)
-        .map(([year, posts]) => ({
-            year: Number.parseInt(year, 10),
-            posts,
-        }))
-        .sort((a, b) => b.year - a.year);
+	// グループ化されたオブジェクトを配列に変換し、年で降順にソート
+	groups = Object.entries(grouped)
+		.map(([year, posts]) => ({
+			year: Number.parseInt(year, 10),
+			posts,
+		}))
+		.sort((a, b) => b.year - a.year);
 });
 </script>
 

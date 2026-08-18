@@ -1,26 +1,26 @@
 [
-  {
-    "name": "Astro",
-    "icon": "https://avatars.githubusercontent.com/u/44914786?s=48&v=4",
-    "description": "コンテンツ駆動型Webサイトのためのフレームワーク",
-    "url": "https://github.com/withastro/astro"
-  },
-  {
-    "name": "Fuwari",
-    "icon": "https://avatars.githubusercontent.com/u/5266488?s=48&v=4",
-    "description": "Astro製の美しいブログテンプレート",
-    "url": "https://github.com/saicaca/fuwari"
-  },
-  {
-    "name": "MDN Web Docs",
-    "icon": "https://avatars.githubusercontent.com/u/7565578?s=48&v=4",
-    "description": "Web技術のリファレンスサイト",
-    "url": "https://developer.mozilla.org/ja/"
-  },
-  {
-    "name": "Zenn",
-    "icon": "https://zenn.dev/images/logo-transparent.png",
-    "description": "エンジニアのための情報共有コミュニティ",
-    "url": "https://zenn.dev/"
-  }
+	{
+		"name": "Astro",
+		"icon": "https://avatars.githubusercontent.com/u/44914786?s=48&v=4",
+		"description": "コンテンツ駆動型Webサイトのためのフレームワーク",
+		"url": "https://github.com/withastro/astro"
+	},
+	{
+		"name": "Fuwari",
+		"icon": "https://avatars.githubusercontent.com/u/5266488?s=48&v=4",
+		"description": "Astro製の美しいブログテンプレート",
+		"url": "https://github.com/saicaca/fuwari"
+	},
+	{
+		"name": "MDN Web Docs",
+		"icon": "https://avatars.githubusercontent.com/u/7565578?s=48&v=4",
+		"description": "Web技術のリファレンスサイト",
+		"url": "https://developer.mozilla.org/ja/"
+	},
+	{
+		"name": "Zenn",
+		"icon": "https://zenn.dev/images/logo-transparent.png",
+		"description": "エンジニアのための情報共有コミュニティ",
+		"url": "https://zenn.dev/"
+	}
 ]

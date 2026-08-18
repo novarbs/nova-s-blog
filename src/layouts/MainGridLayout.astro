@@ -21,8 +21,8 @@ interface Props {
 	description?: string;
 	setOGTypeArticle?: boolean;
 	headings?: MarkdownHeading[];
-        series?: string;
-    lang?: string;
+	series?: string;
+	lang?: string;
 }
 
 const {
@@ -31,8 +31,8 @@ const {
 	description,
 	setOGTypeArticle,
 	headings = [],
-        series,
-    lang = "ja",
+	series,
+	lang = "ja",
 } = Astro.props;
 const hasBannerCredit =
 	siteConfig.banner.enable && siteConfig.banner.credit.enable;

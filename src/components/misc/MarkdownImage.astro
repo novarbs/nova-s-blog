@@ -2,15 +2,17 @@
 import { Image } from "astro:assets";
 
 interface Props {
-  src: string;
-  alt: string;
+	src: string;
+	alt: string;
 }
 
 const { src, alt } = Astro.props;
 const isRemote = src.startsWith("http");
 
 // ローカル画像を動的にインポート
-const localImage = !isRemote ? await import(/* @vite-ignore */ `../../${src}`) : null;
+const localImage = !isRemote
+	? await import(/* @vite-ignore */ `../../${src}`)
+	: null;
 ---
 
 <figure class="flex flex-col items-center">

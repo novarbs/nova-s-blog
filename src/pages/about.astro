@@ -1,7 +1,7 @@
 ---
 import { Icon } from "astro-icon/components";
-import MainGridLayout from "../layouts/MainGridLayout.astro";
 import { profileConfig } from "../config";
+import MainGridLayout from "../layouts/MainGridLayout.astro";
 import { url } from "../utils/url-utils";
 
 // 技術スタック(6分類)
@@ -9,12 +9,28 @@ const skillGroups = [
 	{
 		name: "フロントエンド",
 		icon: "material-symbols:code-rounded",
-		skills: ["TypeScript", "React", "Next.js", "Astro", "Svelte", "Vite", "Tailwind CSS"],
+		skills: [
+			"TypeScript",
+			"React",
+			"Next.js",
+			"Astro",
+			"Svelte",
+			"Vite",
+			"Tailwind CSS",
+		],
 	},
 	{
 		name: "バックエンド",
 		icon: "material-symbols:dns-outline",
-		skills: ["Node.js", "Express", "Python", "FastAPI", "Flask", "OR-Tools", "スクレイピング"],
+		skills: [
+			"Node.js",
+			"Express",
+			"Python",
+			"FastAPI",
+			"Flask",
+			"OR-Tools",
+			"スクレイピング",
+		],
 	},
 	{
 		name: "モバイル / デスクトップ",
@@ -29,12 +45,26 @@ const skillGroups = [
 	{
 		name: "インフラ / DevOps",
 		icon: "material-symbols:deployed-code-outline",
-		skills: ["Docker", "DevContainer", "Git / GitHub", "GitHub Actions", "Cloudflare", "Render"],
+		skills: [
+			"Docker",
+			"DevContainer",
+			"Git / GitHub",
+			"GitHub Actions",
+			"Cloudflare",
+			"Render",
+		],
 	},
 	{
 		name: "AI / 外部サービス連携",
 		icon: "material-symbols:smart-toy-outline",
-		skills: ["Gemini API", "Claude API", "discord.js", "LINE Bot", "OAuth", "Stripe / RevenueCat"],
+		skills: [
+			"Gemini API",
+			"Claude API",
+			"discord.js",
+			"LINE Bot",
+			"OAuth",
+			"Stripe / RevenueCat",
+		],
 	},
 ];
 

@@ -8,33 +8,33 @@ import ImageWrapper from "./misc/ImageWrapper.astro";
 
 // コンポーネントプロパティのインターフェース定義
 interface Props {
-  class?: string;
-  entry: CollectionEntry<"posts">;
-  title: string;
-  url: string;
-  published: Date;
-  updated?: Date;
-  tags: string[];
-  category: string | null;
-  image: string;
-  description: string;
-  draft: boolean;
-  style: string;
-  pinned?: boolean;
+	class?: string;
+	entry: CollectionEntry<"posts">;
+	title: string;
+	url: string;
+	published: Date;
+	updated?: Date;
+	tags: string[];
+	category: string | null;
+	image: string;
+	description: string;
+	draft: boolean;
+	style: string;
+	pinned?: boolean;
 }
 
 // コンポーネントプロパティを分割代入
 const {
-  entry,
-  title,
-  url: postUrl,
-  published,
-  tags,
-  category,
-  image,
-  description,
-  style,
-  pinned,
+	entry,
+	title,
+	url: postUrl,
+	published,
+	tags,
+	category,
+	image,
+	description,
+	style,
+	pinned,
 } = Astro.props;
 const className = Astro.props.class;
 

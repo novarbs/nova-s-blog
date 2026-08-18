@@ -4,177 +4,188 @@ import { url } from "@utils/url-utils.ts";
 import { onMount } from "svelte";
 
 // デバウンス関数
-function debounce<T extends (...args: any[]) => any>(
-    func: T,
-    wait: number
+function debounce<T extends (...args: never[]) => unknown>(
+	func: T,
+	wait: number,
 ): (...args: Parameters<T>) => void {
-    let timeout: NodeJS.Timeout;
-    return (...args: Parameters<T>) => {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => func(...args), wait);
-    };
+	let timeout: NodeJS.Timeout;
+	return (...args: Parameters<T>) => {
+		clearTimeout(timeout);
+		timeout = setTimeout(() => func(...args), wait);
+	};
 }
 
 interface SearchResult {
-    url: string;
-    meta: {
-        title: string;
-    };
-    excerpt: string;
-    urlPath?: string;
+	url: string;
+	meta: {
+		title: string;
+	};
+	excerpt: string;
+	urlPath?: string;
 }
 
 let keywordDesktop = "";
 let keywordMobile = "";
 let result: SearchResult[] = [];
 let isSearching = false;
-let posts: any[] = [];
+type FeedPost = {
+	title: string;
+	description: string;
+	content: string;
+	link: string;
+	fullLink: string;
+};
+let posts: FeedPost[] = [];
 
 const togglePanel = () => {
-    const panel = document.getElementById("search-panel");
-    panel?.classList.toggle("float-panel-closed");
+	const panel = document.getElementById("search-panel");
+	panel?.classList.toggle("float-panel-closed");
 };
 
 const setPanelVisibility = (show: boolean, isDesktop: boolean): void => {
-    const panel = document.getElementById("search-panel");
-    if (!panel || !isDesktop) return;
+	const panel = document.getElementById("search-panel");
+	if (!panel || !isDesktop) return;
 
-    if (show) {
-        panel.classList.remove("float-panel-closed");
-    } else {
-        panel.classList.add("float-panel-closed");
-    }
+	if (show) {
+		panel.classList.remove("float-panel-closed");
+	} else {
+		panel.classList.add("float-panel-closed");
+	}
 };
 
 const highlightText = (text: string, keyword: string): string => {
-    if (!keyword) return text;
-    const escapedKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    const regex = new RegExp(`(${escapedKeyword})`, "gi");
-    return text.replace(regex, "<mark>$1</mark>");
+	if (!keyword) return text;
+	const escapedKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+	const regex = new RegExp(`(${escapedKeyword})`, "gi");
+	return text.replace(regex, "<mark>$1</mark>");
 };
 
 // パフォーマンスを向上させるための最適化された検索関数
 const search = async (keyword: string, isDesktop: boolean): Promise<void> => {
-    if (!keyword.trim()) {
-        setPanelVisibility(false, isDesktop);
-        result = [];
-        return;
-    }
+	if (!keyword.trim()) {
+		setPanelVisibility(false, isDesktop);
+		result = [];
+		return;
+	}
 
-    isSearching = true;
+	isSearching = true;
 
-    try {
-        const keywordLower = keyword.toLowerCase().trim();
-        const searchResults = posts
-            .filter((post) => {
-                // 検索ロジックを最適化し、文字列操作を減らす
-                const titleMatch = post.title.toLowerCase().includes(keywordLower);
-                const descMatch = post.description?.toLowerCase().includes(keywordLower);
-                const linkMatch = post.link.toLowerCase().includes(keywordLower);
-                const contentMatch = post.content.toLowerCase().includes(keywordLower);
-                
-                return titleMatch || descMatch || linkMatch || contentMatch;
-            })
-            .map((post) => {
-                const contentLower = post.content.toLowerCase();
-                const contentIndex = contentLower.indexOf(keywordLower);
-                
-                let excerpt = '';
-                if (contentIndex !== -1) {
-                    const start = Math.max(0, contentIndex - 50);
-                    const end = Math.min(post.content.length, contentIndex + 100);
-                    excerpt = post.content.substring(start, end);
-                    if (start > 0) excerpt = `...${excerpt}`;
-                    if (end < post.content.length) excerpt = `${excerpt}...`;
-                } else {
-                    excerpt = post.description || `${post.content.substring(0, 150)}...`;
-                }
+	try {
+		const keywordLower = keyword.toLowerCase().trim();
+		const searchResults = posts
+			.filter((post) => {
+				// 検索ロジックを最適化し、文字列操作を減らす
+				const titleMatch = post.title.toLowerCase().includes(keywordLower);
+				const descMatch = post.description
+					?.toLowerCase()
+					.includes(keywordLower);
+				const linkMatch = post.link.toLowerCase().includes(keywordLower);
+				const contentMatch = post.content.toLowerCase().includes(keywordLower);
 
-                const postUrl = post.link.startsWith('/') ? post.link : `/posts/${post.link}/`;
+				return titleMatch || descMatch || linkMatch || contentMatch;
+			})
+			.map((post) => {
+				const contentLower = post.content.toLowerCase();
+				const contentIndex = contentLower.indexOf(keywordLower);
 
-                return {
-                    url: url(postUrl),
-                    meta: {
-                        title: post.title
-                    },
-                    excerpt: highlightText(excerpt, keyword),
-                    urlPath: postUrl
-                };
-            });
+				let excerpt = "";
+				if (contentIndex !== -1) {
+					const start = Math.max(0, contentIndex - 50);
+					const end = Math.min(post.content.length, contentIndex + 100);
+					excerpt = post.content.substring(start, end);
+					if (start > 0) excerpt = `...${excerpt}`;
+					if (end < post.content.length) excerpt = `${excerpt}...`;
+				} else {
+					excerpt = post.description || `${post.content.substring(0, 150)}...`;
+				}
 
-        result = searchResults;
-        setPanelVisibility(result.length > 0, isDesktop);
-    } catch (error) {
-        console.error("検索エラー:", error);
-        result = [];
-        setPanelVisibility(false, isDesktop);
-    } finally {
-        isSearching = false;
-    }
+				const postUrl = post.link.startsWith("/")
+					? post.link
+					: `/posts/${post.link}/`;
+
+				return {
+					url: url(postUrl),
+					meta: {
+						title: post.title,
+					},
+					excerpt: highlightText(excerpt, keyword),
+					urlPath: postUrl,
+				};
+			});
+
+		result = searchResults;
+		setPanelVisibility(result.length > 0, isDesktop);
+	} catch (error) {
+		console.error("検索エラー:", error);
+		result = [];
+		setPanelVisibility(false, isDesktop);
+	} finally {
+		isSearching = false;
+	}
 };
 
 // デバウンスされた検索関数を作成
 const debouncedSearch = debounce(search, 300);
 
 onMount(async () => {
-    try {
-        const response = await fetch("/rss.xml");
-        const text = await response.text();
-        const parser = new DOMParser();
-        const xml = parser.parseFromString(text, "text/xml");
-        const items = xml.querySelectorAll("item");
+	try {
+		const response = await fetch("/rss.xml");
+		const text = await response.text();
+		const parser = new DOMParser();
+		const xml = parser.parseFromString(text, "text/xml");
+		const items = xml.querySelectorAll("item");
 
-        posts = Array.from(items).map((item) => {
-            // content:encodedコンテンツを取得するために複数の方法を試す
-            let content = "";
-            const contentEncoded = 
-                item.getElementsByTagNameNS("*", "encoded")[0]?.textContent ||
-                item.querySelector("*|encoded")?.textContent ||
-                "";
-            
-            if (contentEncoded) {
-                // HTMLタグを削除し、HTMLエンティティをデコードする
-                const tempDiv = document.createElement("div");
-                tempDiv.innerHTML = contentEncoded;
-                content = tempDiv.textContent || tempDiv.innerText || "";
-            }
+		posts = Array.from(items).map((item) => {
+			// content:encodedコンテンツを取得するために複数の方法を試す
+			let content = "";
+			const contentEncoded =
+				item.getElementsByTagNameNS("*", "encoded")[0]?.textContent ||
+				item.querySelector("*|encoded")?.textContent ||
+				"";
 
-            // linkから相対パスを抽出する
-            const linkText = item.querySelector("link")?.textContent || "";
-            let relativePath = "";
-            
-            // 複数の可能性のあるURLフォーマットを処理する
-            if (linkText.includes("/posts/")) {
-                // /posts/ 以降のすべてのコンテンツ（複数階層のパスを含む）にマッチさせる
-                const match = linkText.match(/\/posts\/(.+?)(?:\/$|$)/);
-                if (match) {
-                    relativePath = match[1];
-                }
-            } else {
-                // /posts/ が含まれていない場合、パスの最後の部分を取得しようと試みる
-                const urlParts = linkText.split('/').filter(Boolean);
-                relativePath = urlParts[urlParts.length - 1] || "";
-            }
+			if (contentEncoded) {
+				// HTMLタグを削除し、HTMLエンティティをデコードする
+				const tempDiv = document.createElement("div");
+				tempDiv.innerHTML = contentEncoded;
+				content = tempDiv.textContent || tempDiv.innerText || "";
+			}
 
-            return {
-                title: item.querySelector("title")?.textContent || "",
-                description: item.querySelector("description")?.textContent || "",
-                content: content,
-                link: relativePath,
-                fullLink: linkText // 予備として完全なリンクを保持する
-            };
-        });
-    } catch (error) {
-        console.error("RSSの取得エラー:", error);
-    }
+			// linkから相対パスを抽出する
+			const linkText = item.querySelector("link")?.textContent || "";
+			let relativePath = "";
+
+			// 複数の可能性のあるURLフォーマットを処理する
+			if (linkText.includes("/posts/")) {
+				// /posts/ 以降のすべてのコンテンツ（複数階層のパスを含む）にマッチさせる
+				const match = linkText.match(/\/posts\/(.+?)(?:\/$|$)/);
+				if (match) {
+					relativePath = match[1];
+				}
+			} else {
+				// /posts/ が含まれていない場合、パスの最後の部分を取得しようと試みる
+				const urlParts = linkText.split("/").filter(Boolean);
+				relativePath = urlParts[urlParts.length - 1] || "";
+			}
+
+			return {
+				title: item.querySelector("title")?.textContent || "",
+				description: item.querySelector("description")?.textContent || "",
+				content: content,
+				link: relativePath,
+				fullLink: linkText, // 予備として完全なリンクを保持する
+			};
+		});
+	} catch (error) {
+		console.error("RSSの取得エラー:", error);
+	}
 });
 
 $: if (keywordDesktop !== undefined) {
-    debouncedSearch(keywordDesktop, true);
+	debouncedSearch(keywordDesktop, true);
 }
 
 $: if (keywordMobile !== undefined) {
-    debouncedSearch(keywordMobile, false);
+	debouncedSearch(keywordMobile, false);
 }
 </script>
 

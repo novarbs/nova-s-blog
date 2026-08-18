@@ -5,31 +5,31 @@ import { getCategoryUrl, getTagUrl } from "../utils/url-utils";
 
 // コンポーネントプロパティのインターフェース定義
 interface Props {
-  class: string; // 外部から渡されるCSSクラス名
-  published: Date; // 記事の公開日（必須）
-  updated?: Date; // 記事の最終更新日（任意）
-  tags: string[]; // 記事のタグ配列
-  category: string | null; // 記事のカテゴリ（nullの場合あり）
-  hideTagsForMobile?: boolean; // モバイル端末でタグを非表示にするか
-  hideUpdateDate?: boolean; // 更新日を非表示にするか
+	class: string; // 外部から渡されるCSSクラス名
+	published: Date; // 記事の公開日（必須）
+	updated?: Date; // 記事の最終更新日（任意）
+	tags: string[]; // 記事のタグ配列
+	category: string | null; // 記事のカテゴリ（nullの場合あり）
+	hideTagsForMobile?: boolean; // モバイル端末でタグを非表示にするか
+	hideUpdateDate?: boolean; // 更新日を非表示にするか
 }
 
 // Astro.propsからパラメータを分割代入
 const {
-  class: className, // JSのキーワードとの衝突を回避するためリネーム
-  published,
-  updated,
-  tags,
-  category,
-  hideTagsForMobile = false, // デフォルトではモバイルでもタグを表示
-  hideUpdateDate = false, // デフォルトでは更新日を表示
+	class: className, // JSのキーワードとの衝突を回避するためリネーム
+	published,
+	updated,
+	tags,
+	category,
+	hideTagsForMobile = false, // デフォルトではモバイルでもタグを表示
+	hideUpdateDate = false, // デフォルトでは更新日を表示
 } = Astro.props;
 
 // 更新日を表示するかどうかを事前計算
-const shouldShowUpdated = 
-  !hideUpdateDate && // 更新日の非表示設定がない
-  updated && // 更新日が存在する
-  updated.getTime() !== published.getTime(); // 更新日と公開日が異なる
+const shouldShowUpdated =
+	!hideUpdateDate && // 更新日の非表示設定がない
+	updated && // 更新日が存在する
+	updated.getTime() !== published.getTime(); // 更新日と公開日が異なる
 
 // タグの有無を事前計算
 const hasTags = tags && tags.length > 0;

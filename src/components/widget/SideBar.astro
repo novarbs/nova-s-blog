@@ -2,13 +2,13 @@
 import type { MarkdownHeading } from "astro";
 import Categories from "./Categories.astro";
 import Profile from "./Profile.astro";
+import Series from "./Series.astro";
 import Tag from "./Tags.astro";
-import Series from './Series.astro'
 
 interface Props {
 	class?: string;
 	headings?: MarkdownHeading[];
-        series?: string;
+	series?: string;
 }
 
 const className = Astro.props.class;
